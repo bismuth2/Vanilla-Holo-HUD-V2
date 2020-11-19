@@ -1,0 +1,1573 @@
+@name Vanilla Holo HUD 2.0
+
+############## ~ General Variables
+@inputs EGP:wirelink Chair:entity PodController:wirelink CamController:wirelink [TurretBase,Baseplate]:entity Active
+@persist ResW ResH ScaleW ScaleH Font:string FontScale_Small FontScale_Large FontScale_VeryLarge Color:vector4 Update 
+@outputs ActiveOutput
+
+############## ~ Mobility Variables
+@inputs [Gearbox, Engine]:entity RTcamera:wirelink Speedometer
+@outputs Speedometer
+@persist Speedometer Speed Speed_Mode:string EngineRPM:array O P
+
+############## ~ Armament Variables
+@inputs Turret_Weld Track_Weld [PrimaryGun,SecondaryGun,AuxiliaryWeapon_1,AuxiliaryWeapon_2]:entity
+
+############## ~ Preset Variables
+#HUD
+@persist ScreenFX_On ZoomFX_On [ZoomFX, ScreenFX, ZoomSound]:string
+@persist Intro IntroDisconnected IntroConnecting [Disconnected, Connecting1, Connecting2, Success1, Success2, Disconnected_Mat, Connecting_Mat]:string
+@persist Enable_GmodHUD Alternate_Weapon_Theme Alternate_Engine_Theme
+
+#Combat
+@persist [Primary_ChangeAmmo, Secondary_ChangeAmmo, Auxiliary1_ChangeAmmo, Auxiliary2_ChangeAmmo]:string
+@persist TrackVehicleIntegrity CriticalDamage:string PrimaryGunAimpoint SecondaryGunAimpoint AimpointSize AimpointFidelity AimpointOpacity CrosshairStyle
+@persist K V Controls:array
+
+#Radar
+@inputs MiniMap_Screen:wirelink
+@persist GTMPScreen:wirelink GTMP_Screen_Beacon GTMP_Screen_Grid GTMP_Monochrome Render
+@persist Compass BackupCam MiniMap MiniMap_Scale MiniMap_Pos VehicleBeacon VehicleBeaconScale VechielBeaconRatio
+@persist Vector:vector VectorX VectorY
+
+#Controls
+@inputs ThirdPerson Zoom
+@persist PrintControls ThirdPerson Zoom
+
+#Compass
+@persist CompassPrimaryGun CompassThickness CompassScale [CompassBaseplateAngle,CompassPrimaryGunAngle,CompassTurretBaseAngle]:angle
+
+#Sounds
+@persist EnterSound:string EnterSoundVolume EnterSoundPitch ExitSound:string ExitSoundVolume ExitSoundPitch
+
+#Immersion
+@persist RPM_FirstPerson Gear_FirstPerson Speedo_FirstPerson
+@persist PrimaryGun_FirstPerson SecondaryGun_FirstPerson Auxiliary1_FirstPerson Auxiliary2_FirstPerson
+@persist Compass_FirstPerson Crosshair_FirstPerson Enable_FirstPersonHUD ScreenFX_FirstPerson BackupCam_FirstPerson
+
+############## ~ CamController
+@persist Distance FOV Angle:angle Position:vector Parent:entity
+@persist [TurretBase_FirstPersonOffset,TurretBase_ThirdPersonOffset]:vector TurretBase_ThirdPersonDistanceMod
+@persist [Baseplate_FirstPersonOffset, Baseplate_ThirdPersonOffset]:vector Baseplate_ThirdPersonDistanceMod
+@persist ZoomFOV ZoomOffset:vector ZoomDistanceMod Filter:array
+
+############## ~ Debugging
+@persist Debug
+#@outputs OPS CPU
+#@autoupdate
+@trigger all
+
+interval(200)
+if( dupefinished() | duped() ){ reset() }
+if( first() ){
+    soundPurge()
+    holoDeleteAll()
+    EGP:egpClear()    
+    
+                                                                                                                                                                                                                                                    #[
+     ___      ___ ________  ________   ___  ___       ___       ________          ___  ___  ________  ___       ________          ___  ___  ___  ___  ________           _______      ________     
+    |\  \    /  /|\   __  \|\   ___  \|\  \|\  \     |\  \     |\   __  \        |\  \|\  \|\   __  \|\  \     |\   __  \        |\  \|\  \|\  \|\  \|\   ___ \         /  ___  \    |\   __  \    
+    \ \  \  /  / | \  \|\  \ \  \\ \  \ \  \ \  \    \ \  \    \ \  \|\  \       \ \  \\\  \ \  \|\  \ \  \    \ \  \|\  \       \ \  \\\  \ \  \\\  \ \  \_|\ \       /__/|_/  /|   \ \  \|\  \   
+     \ \  \/  / / \ \   __  \ \  \\ \  \ \  \ \  \    \ \  \    \ \   __  \       \ \   __  \ \  \\\  \ \  \    \ \  \\\  \       \ \   __  \ \  \\\  \ \  \ \\ \      |__|//  / /    \ \  \\\  \  
+      \ \    / /   \ \  \ \  \ \  \\ \  \ \  \ \  \____\ \  \____\ \  \ \  \       \ \  \ \  \ \  \\\  \ \  \____\ \  \\\  \       \ \  \ \  \ \  \\\  \ \  \_\\ \         /  /_/__  __\ \  \\\  \ 
+       \ \__/ /     \ \__\ \__\ \__\\ \__\ \__\ \_______\ \_______\ \__\ \__\       \ \__\ \__\ \_______\ \_______\ \_______\       \ \__\ \__\ \_______\ \_______\       |\________\\__\ \_______\
+        \|__|/       \|__|\|__|\|__| \|__|\|__|\|_______|\|_______|\|__|\|__|        \|__|\|__|\|_______|\|_______|\|_______|        \|__|\|__|\|_______|\|_______|        \|_______\|__|\|_______|
+                                                                                                                                                                                                   
+                                                                                                                                                                                                   
+                                                                                                                                                                                                   
+                        ________      ___    ___      ________  ___     ___    ___                                                                                                                 
+                       |\   __  \    |\  \  /  /|    |\   ____\|\  \   |\  \  /  /|                                                                                                                
+                       \ \  \|\ /_   \ \  \/  / /    \ \  \___|\ \  \  \ \  \/  / /                                                                                                                
+                        \ \   __  \   \ \    / /      \ \_____  \ \  \  \ \    / /                                                                                                                 
+                         \ \  \|\  \   \/  /  /        \|____|\  \ \  \  /     \/                                                                                                                  
+                          \ \_______\__/  / /            ____\_\  \ \__\/  /\   \                                                                                                                  
+                           \|_______|\___/ /            |\_________\|__/__/ /\ __\                                                                                                                 
+                                    \|___|/             \|_________|   |__|/ \|__|                                                                                                                 
+                                                                                                                                                                                                   
+                                                                                                                                                                                                   
+                                                                                                                                                                                                                                                    ]#
+##################################################################################################################################################################################################################################################
+##################################################################################################################################################################################################################################################
+##################################################################################################################################################################################################################################################
+                                                                                                                                                                                                                                                    #[
+     ___  ________   ________ ________  ________  _____ ______   ________  _________  ___  ________  ________      
+    |\  \|\   ___  \|\  _____|\   __  \|\   __  \|\   _ \  _   \|\   __  \|\___   ___|\  \|\   __  \|\   ___  \    
+    \ \  \ \  \\ \  \ \  \__/\ \  \|\  \ \  \|\  \ \  \\\__\ \  \ \  \|\  \|___ \  \_\ \  \ \  \|\  \ \  \\ \  \   
+     \ \  \ \  \\ \  \ \   __\\ \  \\\  \ \   _  _\ \  \\|__| \  \ \   __  \   \ \  \ \ \  \ \  \\\  \ \  \\ \  \  
+      \ \  \ \  \\ \  \ \  \_| \ \  \\\  \ \  \\  \\ \  \    \ \  \ \  \ \  \   \ \  \ \ \  \ \  \\\  \ \  \\ \  \ 
+       \ \__\ \__\\ \__\ \__\   \ \_______\ \__\\ _\\ \__\    \ \__\ \__\ \__\   \ \__\ \ \__\ \_______\ \__\\ \__\
+        \|__|\|__| \|__|\|__|    \|_______|\|__|\|__|\|__|     \|__|\|__|\|__|    \|__|  \|__|\|_______|\|__| \|__|
+                                                                                                                   
+                                                                                                                                                                                                                                                    ]#
+##################################################################################################################################################################################################################################################
+############################################# ~ A customizable vanilla themed ACF HUD by Six(STEAM_0:1:21779583)
+############################################# ~ Features an Intro Sequence, a 3D compass, GTMP Minimap Support, backup RTcam
+############################################# ~ Includes support for Combat Vehicles, Mechs, Cars & 1 primary/secondary gun & 2 Counter-measures
+#############################################       It was designed with Immersion & Simplicity in-mind, if you are like me, and you hate seeing HUD elements
+#############################################       while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
+#############################################
+#############################################~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#############################################~~~ TO GET STARTED
+############################################# Simply wire each Input to whatever you want, there are no Outputs except Speedometer(Wire Speedometer Input to it) and ActiveOutput(For DakTek Mechs, or whatever you need it for.)
+#############################################   * The E2 will automatically detect what Entities you have wired, and will adjust accordingly.
+#############################################   * The E2 REQUIRES a cam controller for the compass to function!
+#############################################
+#############################################~~~ REQUIRED CAM CONTROLLER SETTINGS
+############################################# Coordinates local to parent - NO
+############################################# Client side movement        - YES
+############################################# Free Movement               - NO
+############################################# Localized Movement          - NO
+############################################# Client Side Zooming         - NO
+############################################# Auto un-clip                - Preference
+############################################# Auto un-clip ignores water  - Preference
+############################################# Draw Player                 - Preference
+############################################# Draw Parent                 - NO
+#############################################
+#############################################~~~ TROUBLESHOOTING
+############################################# Problem including file 'gtmp3_lib'
+#############################################   * This E2 REQUIRES gtmp3_lib saved inside your expression2 directory, if you don't have it, #include will fail!
+#############################################
+############################################# This E2 is laggy!
+#############################################   * If the MiniMap is enabled, GTMP will render the map and the E2 will spike up to 500us+, DO NOT PANIC! It will not stay that high for long.
+#############################################
+############################################# I don't see the MiniMap on my HUD!
+#############################################   * If the MiniMap is not drawing on your HUD, it is likely because you cannot see the Digital Screen.
+#############################################   * The Digital Screen MUST be in your view at least once to display it on your HUD, this is a limitation of egpMaterialFromScreen()
+#############################################
+############################################# The CamController is not working!
+#############################################   * The CamController requires atleast a Baseplate or a TurretBase wired to the E2 to function.
+#############################################
+##################################################################################################################################################################################################################################################
+##################################################################################################################################################################################################################################################
+                                                                                                                                                                                                                                                        #[
+     ________  _______  _________  _________  ___  ________   ________  ________      
+    |\   ____\|\  ___ \|\___   ___|\___   ___|\  \|\   ___  \|\   ____\|\   ____\     
+    \ \  \___|\ \   __/\|___ \  \_\|___ \  \_\ \  \ \  \\ \  \ \  \___|\ \  \___|_    
+     \ \_____  \ \  \_|/__  \ \  \     \ \  \ \ \  \ \  \\ \  \ \  \  __\ \_____  \   
+      \|____|\  \ \  \_|\ \  \ \  \     \ \  \ \ \  \ \  \\ \  \ \  \|\  \|____|\  \  
+        ____\_\  \ \_______\  \ \__\     \ \__\ \ \__\ \__\\ \__\ \_______\____\_\  \ 
+       |\_________\|_______|   \|__|      \|__|  \|__|\|__| \|__|\|_______|\_________\
+       \|_________|                                                       \|_________|
+                                                                                      
+                                                                                                                                                                                                                                                    ]#
+    #~~ Enables the GmodHUD for Wire Debugger, Shows Camera POV & prints debug info
+        Debug = 0
+        
+    #~~ Cam Controller Offsets
+        # ~ Offsets if you ONLY have a baseplate
+        Baseplate_FirstPersonOffset = vec(0,0,65)         # CameraPosition during FirstPerson
+        Baseplate_ThirdPersonOffset = vec(0,0,125)        # CameraPosition during ThirdPerson
+        Baseplate_ThirdPersonDistanceMod = 250            # How far the camera is pushed back during ThirdPerson
+        
+        # ~ Offsets if you have a TurretBase
+        TurretBase_FirstPersonOffset = vec(0,0,45)    # CameraPosition during FirstPerson
+        TurretBase_ThirdPersonOffset = vec(0,0,100)      # CameraPosition during ThirdPerson
+        TurretBase_ThirdPersonDistanceMod = 275           # How far the camera is pushed back during ThirdPerson
+        
+            ZoomFOV = 5                                   # Zoom depth (5 - 25)
+            ZoomOffset = vec(150,0,65)                # CameraPosition during Zoom
+            ZoomDistanceMod = 100                         # Zoom Distance (100-15), How far the camera is pushed back during Zoom (this allows you to see the compass during zoom)
+                ZoomFX_On = 1                             # Enable Zoom Vignette
+                ZoomFX = "vgui/zoom"
+                ZoomSound = "Default.Zoom"
+    
+    #~~ Speedometer
+        Speed_Mode = "km/h"                               # Speed mode can either be km/h or mph
+        
+    #~~ Enable an Alternate Weapon Theme
+        Alternate_Weapon_Theme = 1
+        
+    #~~ Enable an Alternate Engine Theme
+        Alternate_Engine_Theme = 0
+        
+    #~~ Enable the default HUD
+        Enable_GmodHUD = 1
+        
+    #~~ Enable the HUD in FirstPerson
+        # This is a bit buggy, you have been warned!
+        Enable_FirstPersonHUD = 1
+    
+    #~~ Enable Intro
+        Intro = 0
+            # ~ Intro Timers (Formatted in Milliseconds)
+            IntroDisconnected = 1000
+            IntroConnecting = 3000
+                # ~ Intro SoundFX
+                Disconnected = "novaprospekt.radiostatic_1"
+                Connecting1 = "acf_extra/airfx/gear_down.wav"
+                Connecting2 = "acf_extra/airfx/bomb_reload.wav"
+                Success1 = "k_lab.teleport_sound"
+                Success2 = ""
+                ## ~ EXTRA SOUND FX ~ ##
+                # ~ Disconnected Sounds
+                # novaprospekt.radiostatic_1
+                # acf_extra/airfx/hominglockaquired1.wav
+                # HUDQuickInfo.LowAmmo
+                    # ~ Connecting Sounds
+                    # acf_extra/airfx/gear_down.wav
+                    # acf_extra/airfx/bomb_reload.wav
+                        # ~ Success Sounds
+                        # hl1/fvox/activated.wav
+                        # k_lab.teleport_sound
+                            # ~ Intro ScreenFX
+                            Disconnected_Mat = "effects/tvscreen_noise002a"
+                            Connecting_Mat = "effects/tvscreen_noise001a"
+                            # ~ Extra Materials
+                            # effects/tvscreen_noise002a
+                            # effects/tvscreen_noise001a
+                            # effects/prisonmap_disp
+                            # models/props_lab/projector_noise
+  
+    #~~ Enable Screen overlay effects
+        ScreenFX_On = 1
+        ScreenFX = "effects/combine_binocoverlay"
+    
+    #~~ Enable RTcam Screen (Requires a RT Camera!)
+        BackupCam = 0
+    
+    #~~ Enable redreaper GTMP Support (Requires a Console Screen & Redreaper's GTMP3 Lib E2!)
+    #~~ These option effect the MiniMap drawn on your screen
+        MiniMap = 1
+        MiniMap_Scale = 1.25        # ~ MiniMap Scale (normal 1 - 1.5 huge)
+        MiniMap_Pos = 33            # ~ MiniMap Position (normal 0 - 66 huge)
+            VehicleBeacon = 1               # ~ Enable a vehicle beacon
+            VehicleBeaconScale = 1.25       # ~ Beacon Scale (Tiny 1 - 2 Huge)
+            VechielBeaconRatio = 140        # ~ Adjust slightly if the beacon is offset (Careful with this!)
+            
+                # ~ These options effect GTMP (The E2 that renders the Map to the DigitalScreen)
+                # (Adjust these if you want to look at the Digital Screen in firstPerson)
+                    GTMP_Screen_Beacon = 0  # ~ Enable a Holo Tracker on the Digital Screen
+                    GTMP_Screen_Grid = 0    # ~ Enable a Holo Grid on the Digital Screen
+                    GTMP_Monochrome = 0     # ~ This makes the map Monochrome, unless the DigitalScreen is colored, then it will match the color of the DigitalScreen
+    
+    #~~ Enable 3D Compass
+        Compass = 1
+        CompassPrimaryGun = 1       # ~ Disable if you want the compass to angle itself to the TurretBase instead of the PrimaryGun (If the PrimaryGun is lost, it will Disable this anyway)
+            CompassThickness = 2    # ~ Thickness (flat 0 - 4 Huge)
+            CompassScale = 0.75     # ~ Scale (tiny 0.5 - 1 big)
+                
+                # ~ Compass Angles (Adjust if its offset on your vehicle)
+                CompassPrimaryGunAngle = ang(90,0,-90)
+                CompassTurretBaseAngle = ang(90,0,180)
+                CompassBaseplateAngle = ang(90,0,180)
+                
+    #TODO: Implement this!
+    #~~ Track vehicle integrity (Requires Adv Entity Markers wired to the props of your Turret, Chassis, LeftWheels & RightWheels (Or Mech Legs))
+        #TrackVehicleIntegrity = 1
+        #CriticalDamage = "NPC_AttackHelicopter.BadlyDamagedAlert"
+
+    #~~ Enable a dot displaying the Guns aimpoint
+        PrimaryGunAimpoint = 1
+        SecondaryGunAimpoint = 1
+            AimpointSize = 4 #(4 - 16)
+            AimpointFidelity = 180 #(4 - 180)
+            AimpointOpacity = 125
+            
+    #~~ Crosshair Style (0 Off / 1 XBox / 2 FancyCircle / 3 Circle)
+        CrosshairStyle = 1
+        
+    #~~ Sound Effects
+        EnterSound = "hl1/fvox/activated.wav"
+        EnterSoundVolume = 0.5
+        EnterSoundPitch = 65
+        
+        ExitSound = "hl1/fvox/deactivated.wav"
+        ExitSoundVolume = 0.5
+        ExitSoundPitch = 65
+        
+        Primary_ChangeAmmo = "acf_extra/tankfx/clunk.wav"
+        Secondary_ChangeAmmo = "weapons/smg1/smg1_reload.wav"
+        Auxiliary1_ChangeAmmo = "weapons/shotgun/shotgun_reload1.wav"
+        Auxiliary2_ChangeAmmo = "weapons/shotgun/shotgun_reload1.wav"  
+                
+    #~~ Print Controls to chat (edit to fit your Vehicles control scheme)
+        PrintControls = 0
+            Controls = array(
+                "------------------------------- Welcome Commander -------------------------------",
+                "1 FLIR - 2 Spotlight - 3 Smoke - 4 Flare",
+                "CTRL Perspective - CapsLock LockGear",
+                "F EnableTurret - G Ignition",
+                "Mouse_1 Cannon - Mouse_2 MG - Mouse_5 Zoom",
+                "WASD Move - Space Brake+Clutch - Shift EmergencyBrake+Clutch",
+                "----------------------------------------------------------------------------------------"
+            )
+
+############################################# ~ STOP EDITING HERE ~ ##############################################################################################################################################################################
+##################################################################################################################################################################################################################################################
+    
+    function void drawEGP(){
+        
+        if( !Enable_GmodHUD & !Debug ){
+            PodController["Hide HUD",number] = 1
+        }else{
+            PodController["Hide HUD",number] = 0
+        }
+        
+        EGP:egpClear()
+
+        ########################################################################################################################    Screen FX
+        if( ScreenFX_On ){
+            EGP:egpBox(5,vec2(ResW/2,ResH/2),vec2(ResW,ResH))
+            EGP:egpMaterial(5,ScreenFX)
+        }
+        
+        ########################################################################################################################    Zoom FX
+        if( ZoomFX_On ){
+            # ~ Zoom
+            EGP:egpBox(23,vec2(ResW/2,ResH/2),vec2(ResW,ResH))
+            EGP:egpAngle(23,0)
+            EGP:egpMaterial(23,ZoomFX)
+            EGP:egpAlpha(23,0)
+            
+            EGP:egpBox(24,vec2(ResW/2,ResH/2),vec2(ResW,ResH))
+            EGP:egpAngle(24,-180)
+            EGP:egpMaterial(24,ZoomFX)
+            EGP:egpAlpha(24,0)
+        }
+        
+        ########################################################################################################################    Gun Crosshairs
+        if( PrimaryGunAimpoint ){
+            # ~ Parent EGP_Tracker to GunHolo
+            EGP:egp3DTracker(20,vec(0,0,0))
+            EGP:egpParent(20,holoEntity(2))
+                
+            # ~ Parent SolidCircle Turret_WeldON Aimpoint to EGP_Tracker
+            EGP:egpCircle(21,vec2(0,0),vec2(AimpointSize*ScaleW,AimpointSize*ScaleH))
+            EGP:egpFidelity(21,AimpointFidelity)
+            EGP:egpColor(21,vec(255*!PrimaryGun:acfReady(),255*PrimaryGun:acfReady(),0))
+            EGP:egpParent(21,20)
+                # ~ Parent HollowCircle Turret_WeldOFF Aimpoint to EGP_Tracker
+                EGP:egpCircleOutline(34,vec2(0,0),vec2(AimpointSize*ScaleW,AimpointSize*ScaleH))
+                EGP:egpFidelity(34,AimpointFidelity)
+                EGP:egpParent(34,20)
+                EGP:egpColor(34,EGP:egpColor(21))
+        }
+        if( SecondaryGunAimpoint ){
+            # ~ Parent EGP_Tracker to GunHolo
+            EGP:egp3DTracker(41,vec(0,0,0))
+            EGP:egpParent(41,holoEntity(40))
+                
+            # ~ Parent SolidCircle Turret_WeldON Aimpoint to EGP_Tracker
+            EGP:egpCircle(42,vec2(0,0),vec2(AimpointSize*ScaleW,AimpointSize*ScaleH))
+            EGP:egpFidelity(42,AimpointFidelity)
+            EGP:egpColor(42,vec(255*!SecondaryGun:acfReady(),255*SecondaryGun:acfReady(),0))
+            EGP:egpParent(42,41)
+                # ~ Parent HollowCircle Turret_WeldOFF Aimpoint to EGP_Tracker
+                EGP:egpCircleOutline(43,vec2(0,0),vec2(AimpointSize*ScaleW,AimpointSize*ScaleH))
+                EGP:egpFidelity(43,AimpointFidelity)
+                EGP:egpParent(43,41)
+                EGP:egpColor(43,EGP:egpColor(42))
+        }
+        
+        ########################################################################################################################    Screen Crosshairs
+        # Xbox
+        if( CrosshairStyle == 1 ){
+            EGP:egpBox(22,vec2(ResW/2,ResH/2),vec2(100*ScaleW,100*ScaleH))
+            EGP:egpMaterial(22,"vgui/hud/xbox_reticle")
+        }
+
+        # Fancy Circle
+        if( CrosshairStyle == 2 ){
+            EGP:egpBox(22,vec2(ResW/2,ResH/2),vec2(50*ScaleW,50*ScaleH))
+            EGP:egpMaterial(22,"vgui/hud/autoaim")
+        }
+  
+        # Basic Circle
+        if( CrosshairStyle == 3 ){
+            EGP:egpCircleOutline(22,vec2(ResW/2,ResH/2),vec2(25*ScaleW,25*ScaleH))
+            EGP:egpColor(22,vec4(255,255,255,150))
+        }
+        
+        ########################################################################################################################    Backup Cam
+        if( BackupCam ){
+            # Backup Camera Background
+            EGP:egpRoundedBox(25,vec2(ResW/2-(0*ScaleW),ResH/6-(0*ScaleH)),vec2(490*ScaleW,164*ScaleH))
+            EGP:egpRadius(25,8)
+            EGP:egpColor(25,vec4(0,0,0,75))
+            
+            # Backup Camera
+            EGP:egpRoundedBox(26,vec2(0,0),vec2(480*ScaleW,154*ScaleH))
+            EGP:egpRadius(26,8)
+            EGP:egpMaterial(26,"models/rendertarget")
+            EGP:egpColor(26,vec4(255,255,255,255))
+            EGP:egpParent(26,25)
+        } 
+        
+        ########################################################################################################################    Mini Map
+        if( MiniMap ){
+            # ~ MiniMap Background
+            EGP:egpRoundedBox(27,vec2(ResW/12-(0-(MiniMap_Pos)*ScaleW),ResH/7-(0-(MiniMap_Pos)*ScaleH)),vec2(250*MiniMap_Scale*ScaleW,250*MiniMap_Scale*ScaleH))
+            EGP:egpRadius(27,8)
+            EGP:egpColor(27,vec4(0,0,0,75))
+            
+            # ~ MiniMap
+            EGP:egpRoundedBox(28,vec2(0,0),vec2(240*MiniMap_Scale*ScaleW,240*MiniMap_Scale*ScaleH))
+            EGP:egpRadius(28,8)
+            EGP:egpMaterialFromScreen(28,MiniMap_Screen:entity())
+            EGP:egpColor(28,vec4(255,255,255,255))
+            EGP:egpAngle(28,-180)
+            EGP:egpParent(28,27)
+            
+                if(VehicleBeacon){
+                    # ~ Vehicle Beacon
+                    EGP:egpBox(30,vec2(0,0),vec2(7.5*VehicleBeaconScale*ScaleW,7.5*VehicleBeaconScale*ScaleH))
+                    EGP:egpColor(30,vec4(0,255,0,255))
+                    EGP:egpParent(30,28)
+                    
+                    # ~ Vehicle Beacon Top
+                    EGP:egpBox(31,vec2((0*ScaleW),(3.9*VehicleBeaconScale*ScaleH)),vec2(5.25*VehicleBeaconScale*ScaleW,5.25*VehicleBeaconScale*ScaleH))
+                    EGP:egpAngle(31,45)
+                    EGP:egpColor(31,vec4(0,255,0,255))
+                    EGP:egpParent(31,30)
+                }
+        }  
+          
+        ########################################################################################################################     Alt Engine Theme ON
+        if( Alternate_Engine_Theme ){
+            # Draw Elements for positioning later
+            # Draw Boxes
+            if( Engine | Speedometer | Gearbox ){
+                # Large Box RPM
+                EGP:egpRoundedBox(100,vec2(ResW/1-(1770*ScaleW),ResH/1-(67*ScaleH)),vec2(230*ScaleW,80*ScaleH))
+                EGP:egpRadius(100,6)
+                EGP:egpColor(100,vec4(0,0,0,75))
+                # Large Box Speed AND Gear
+                EGP:egpRoundedBox(113,vec2(ResW/1-(1483*ScaleW),ResH/1-(67*ScaleH)),vec2(243*ScaleW,80*ScaleH))
+                EGP:egpRadius(113,6)
+                EGP:egpColor(113,vec4(0,0,0,75))
+                # Tiny Box Speed AND Gear
+                EGP:egpRoundedBox(150,vec2(ResW/1-(1557*ScaleW),ResH/1-(67*ScaleH)),vec2(80*ScaleW,80*ScaleH))
+                EGP:egpRadius(150,6)
+                EGP:egpColor(150,vec4(0,0,0,75))
+            }
+            # Draw Instruments
+            # Parent to Large Box RPM
+            if( Engine ){
+                    # Engine Text
+                    EGP:egpText(111,""+Engine:acfName(),vec2((-97*ScaleW),(-31*ScaleH)))
+                    EGP:egpFont(111,Font,FontScale_Small)
+                    EGP:egpAlign(111,0)
+                    EGP:egpColor(111,Color)
+                    EGP:egpParent(111,100)
+                        # RPM display
+                        EGP:egpBox(101,vec2(-90*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(101,100)
+                        EGP:egpColor(101,Color)
+                        EGP:egpAlpha(101,50)
+                        
+                        EGP:egpBox(102,vec2(-70*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(102,100)
+                        EGP:egpColor(102,Color)
+                        EGP:egpAlpha(102,50)
+                        
+                        EGP:egpBox(103,vec2(-50*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(103,100)
+                        EGP:egpColor(103,Color)
+                        EGP:egpAlpha(103,50)
+                        
+                        EGP:egpBox(104,vec2(-30*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(104,100)
+                        EGP:egpColor(104,Color)
+                        EGP:egpAlpha(104,50)
+                        
+                        EGP:egpBox(105,vec2(-10*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(105,100)
+                        EGP:egpColor(105,Color)
+                        EGP:egpAlpha(105,50)
+                        
+                        EGP:egpBox(106,vec2(10*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(106,100)
+                        EGP:egpColor(106,Color)
+                        EGP:egpAlpha(106,50)
+                        
+                        EGP:egpBox(107,vec2(30*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(107,100)
+                        EGP:egpColor(107,Color)
+                        EGP:egpAlpha(107,50)
+                        
+                        EGP:egpBox(108,vec2(50*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(108,100)
+                        EGP:egpColor(108,Color)
+                        EGP:egpAlpha(108,50)
+                        
+                        EGP:egpBox(109,vec2(70*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(109,100)
+                        EGP:egpColor(109,Color)
+                        EGP:egpAlpha(109,50)
+                        
+                        EGP:egpBox(110,vec2(90*ScaleW,0*ScaleH),vec2(15*ScaleW,10*ScaleH))
+                        EGP:egpParent(110,100)
+                        EGP:egpColor(110,Color)
+                        EGP:egpAlpha(110,50)
+                        
+                        #EngineRPM = array( EGP[101], EGP[102], EGP[103], EGP[104], EGP[105], EGP[106], EGP[107], EGP[108], EGP[109], EGP[110] )
+                        
+                            # RPM Text
+                            EGP:egpText(112,"RPM",vec2((-97*ScaleW),(12*ScaleH)))
+                            EGP:egpFont(112,Font,FontScale_Small)
+                            EGP:egpAlign(112,0)
+                            EGP:egpColor(112,Color)
+                            EGP:egpParent(112,100)
+            }
+            # Parent to Large Box Speed AND Gear
+            if( Speedometer ){
+                # ~ Speddo text
+                EGP:egpText(114,Speed_Mode:upper(),vec2(-45*ScaleW,5*ScaleH))
+                EGP:egpFont(114,Font,FontScale_Small)
+                EGP:egpAlign(114,1)
+                EGP:egpColor(114,Color)
+                EGP:egpParent(114,113)
+                    # ~ Speedo counter
+                    EGP:egpText(115,"0",vec2((0*ScaleW),(-35*ScaleH)))
+                    EGP:egpFont(115,Font,FontScale_Large)
+                    EGP:egpAlign(115,1)
+                    EGP:egpColor(115,Color)
+                    EGP:egpParent(115,114)
+            }
+            # Parent to Large Box Speed AND Gear
+            if( Gearbox ){
+                # ~ Gear Text
+                EGP:egpText(116,"GEAR",vec2(45*ScaleW,5*ScaleH))
+                EGP:egpFont(116,Font,FontScale_Small)
+                EGP:egpAlign(116,1)
+                EGP:egpColor(116,Color)
+                EGP:egpParent(116,113)
+                    # ~ Gear Count
+                    EGP:egpText(117,"N",vec2((0*ScaleW),(-35*ScaleH)))
+                    EGP:egpFont(117,Font,FontScale_Large)
+                    EGP:egpAlign(117,1)
+                    EGP:egpColor(117,Color)
+                    EGP:egpParent(117,116)
+            }
+            # Reposition Elements
+            if( !Engine ){
+                # Remove Large Box RPM
+                EGP:egpRemove(100)
+                # Reposition Large Box Speed AND Gear
+                EGP:egpPos(113,vec2(ResW/1-(1770*ScaleW),ResH/1-(67*ScaleH)))
+                # Reposition Tiny Box Speed AND Gear
+                EGP:egpPos(150,vec2(ResW/1-(1845*ScaleW),ResH/1-(67*ScaleH)))
+            }
+            # Two Elements
+            # Speed AND Gear
+            if( Speedometer & Gearbox ){
+                # Remove Tiny Box
+                EGP:egpRemove(150)
+            }
+            # One Element
+            # Speed
+            elseif( Speedometer & !Gearbox ){
+                # Parent Speed to Tiny Box
+                EGP:egpParent(114,150)
+                EGP:egpPos(114,vec2(0*ScaleW,5*ScaleH))
+                # Remove Big Box
+                EGP:egpRemove(113)
+            }
+            # Gear
+            elseif( !Speedometer & Gearbox ){
+                # Parent Gear to Tiny Box
+                EGP:egpParent(116,150)
+                EGP:egpPos(116,vec2(0*ScaleW,5*ScaleH))
+                # Remove Big Box
+                EGP:egpRemove(113)
+            }
+            elseif( Engine ){
+                # Remove Big Box
+                EGP:egpRemove(113)
+                # Remove Tiny Box
+                EGP:egpRemove(150)
+            }
+        ########################################################################################################################    Alternate_Engine_Theme OFF            
+        }elseif( !Alternate_Engine_Theme ){
+            # Draw Elements for positioning later
+            # Draw Boxes
+            if( Engine | Speedometer | Gearbox ){
+                # Large Box
+                EGP:egpRoundedBox(100,vec2(ResW/1-(1770*ScaleW),ResH/1-(67*ScaleH)),vec2(230*ScaleW,80*ScaleH))
+                EGP:egpRadius(100,6)
+                EGP:egpColor(100,vec4(0,0,0,75))
+                # Tiny Box
+                EGP:egpRoundedBox(150,vec2(ResW/1-(1845*ScaleW),ResH/1-(67*ScaleH)),vec2(80*ScaleW,80*ScaleH))
+                EGP:egpRadius(150,6)
+                EGP:egpColor(150,vec4(0,0,0,75))
+            }
+            # Draw Indstruments
+            if( Engine ){
+                # ~ Engine Text
+                EGP:egpText(111,"RPM",vec2(-70*ScaleW,5*ScaleH))
+                EGP:egpFont(111,Font,FontScale_Small)
+                EGP:egpAlign(111,1)
+                EGP:egpColor(111,Color)
+                # ~ Engine Circle
+                EGP:egpCircle(101,vec2(0*ScaleW,-22*ScaleH),vec2(10*ScaleW,10*ScaleH))
+                EGP:egpColor(101,vec(100,100,100))
+                EGP:egpParent(101,111)
+            }
+            if( Speedometer ){
+                # ~ Speddo text
+                EGP:egpText(114,Speed_Mode:upper(),vec2(0*ScaleW,5*ScaleH))
+                EGP:egpFont(114,Font,FontScale_Small)
+                EGP:egpAlign(114,1)
+                EGP:egpColor(114,Color)
+                # ~ Speedo counter
+                EGP:egpText(115,"0",vec2((0*ScaleW),(-35*ScaleH)))
+                EGP:egpFont(115,Font,FontScale_Large)
+                EGP:egpAlign(115,1)
+                EGP:egpColor(115,Color)
+                EGP:egpParent(115,114)
+            }
+            if( Gearbox ){
+                # ~ Gear Text
+                EGP:egpText(116,"GEAR",vec2((70*ScaleW),(5*ScaleH)))
+                EGP:egpFont(116,Font,FontScale_Small)
+                EGP:egpAlign(116,1)
+                EGP:egpColor(116,Color)
+                # ~ Gear Count
+                EGP:egpText(117,"N",vec2((0*ScaleW),(-35*ScaleH)))
+                EGP:egpFont(117,Font,FontScale_Large)
+                EGP:egpColor(117,Color)
+                EGP:egpAlign(117,1)
+                EGP:egpParent(117,116)
+            }
+            # Position Elements
+            # Three Elements
+            # Engine AND Speed AND Gear
+            if( Engine & Speedometer & Gearbox ){
+                #Remove Tiny Box
+                EGP:egpRemove(150)
+                    #Engine
+                    EGP:egpParent(111,100)
+                    EGP:egpPos(111,vec2(-70*ScaleW,5*ScaleH))
+                    #Speedo
+                    EGP:egpParent(114,100)
+                    EGP:egpPos(114,vec2(0*ScaleW,5*ScaleH))
+                    #Gearbox
+                    EGP:egpParent(116,100)
+                    EGP:egpPos(116,vec2(70*ScaleW,5*ScaleH))
+            }
+            #Two Elements
+            #Engine AND Speed XOR Gear
+            elseif( Engine & (!Speedometer ^^ !Gearbox) ){
+                #Remove Tiny Box
+                EGP:egpRemove(150)
+                    #Engine
+                    EGP:egpParent(111,100)
+                    EGP:egpPos(111,vec2(-45*ScaleW,5*ScaleH))
+                    #Speedo
+                    EGP:egpParent(114,100)
+                    EGP:egpPos(114,vec2(45*ScaleW,5*ScaleH))
+                    #Gearbox
+                    EGP:egpParent(116,100)
+                    EGP:egpPos(116,vec2(45*ScaleW,5*ScaleH))
+            }
+            #Speed AND Gear
+            elseif( !Engine & Speedometer & Gearbox ){
+                #Remove Tiny Box
+                EGP:egpRemove(150)
+                    #Speedo
+                    EGP:egpParent(114,100)
+                    EGP:egpPos(114,vec2(-45*ScaleW,5*ScaleH))
+                    #Gearbox
+                    EGP:egpParent(116,100)
+                    EGP:egpPos(116,vec2(45*ScaleW,5*ScaleH))
+            }
+            # One Element
+            #Engine XOR Speed
+            elseif( !Engine ^^ !Speedometer ){
+                #Remove Large Box
+                EGP:egpRemove(100)
+                    #Engine
+                    EGP:egpParent(111,150)
+                    EGP:egpPos(111,vec2(0*ScaleW,5*ScaleH))
+                    #Speedo
+                    EGP:egpParent(114,150)
+                    EGP:egpPos(114,vec2(0*ScaleW,5*ScaleH))
+            }
+            #Gear
+            elseif( !Engine & !Speedometer & Gearbox ){
+                #Remove Large Box
+                EGP:egpRemove(100)
+                    #Gearbox
+                    EGP:egpParent(116,150)
+                    EGP:egpPos(116,vec2(0*ScaleW,5*ScaleH))
+            }
+
+        }
+        
+        ########################################################################################################################     Alt Weapon Theme ON
+        ##########################################################################################   Right box
+        if( PrimaryGun ){
+            EGP:egpRoundedBox(6,vec2(ResW/1-(150*ScaleW),ResH/1-(67*ScaleH)),vec2(230*ScaleW,80*ScaleH))
+            EGP:egpRadius(6,6)
+            EGP:egpColor(6,vec4(0,0,0,75))
+                # ~ PrimaryGun text
+                EGP:egpText(7,""+PrimaryGun:acfAmmoType(),vec2((65*ScaleW),(5*ScaleH)))
+                EGP:egpFont(7,Font,FontScale_Large)
+                EGP:egpAlign(7,1)
+                EGP:egpColor(7,Color)
+                EGP:egpParent(7,6)
+                    # ~ PrimaryGun ammo
+                    EGP:egpText(8,"----",vec2((-45*ScaleW),(-27*ScaleH)))
+                    EGP:egpFont(8,Font,FontScale_VeryLarge)
+                    EGP:egpAlign(8,1)
+                    EGP:egpColor(8,vec4(255,0,0,255))
+                    EGP:egpParent(8,6)
+        }
+        
+        ##########################################################################################   Left box
+        if( SecondaryGun ){
+            EGP:egpRoundedBox(13,vec2(ResW/1-(430*ScaleW),ResH/1-(67*ScaleH)),vec2(243*ScaleW,80*ScaleH))
+            EGP:egpRadius(13,8)
+            EGP:egpColor(13,vec4(0,0,0,75)) 
+                # ~ SecondaryGun text
+                EGP:egpText(14,""+SecondaryGun:acfAmmoType(),vec2((65*ScaleW),(5*ScaleH)))
+                EGP:egpFont(14,Font,FontScale_Large)
+                EGP:egpAlign(14,1)
+                EGP:egpColor(14,Color)
+                EGP:egpParent(14,13)
+                    # ~ SecondaryGun Count
+                    EGP:egpText(15,"----",vec2((-45*ScaleW),(-27*ScaleH)))
+                    EGP:egpFont(15,Font,FontScale_VeryLarge)
+                    EGP:egpColor(15,vec4(255,0,0,255))
+                    EGP:egpAlign(15,1)
+                    EGP:egpParent(15,13)
+        }
+    
+        ##########################################################################################   Counter-Measures
+            if( AuxiliaryWeapon_1 ){
+                # AuxiliaryWeapon_1 Box
+                EGP:egpRoundedBox(32,vec2(ResW/1-(200*ScaleW),ResH/1-(170*ScaleH)),vec2(80*ScaleW,80*ScaleH))
+                EGP:egpRadius(32,8)
+                EGP:egpColor(32,vec4(0,0,0,75))
+                    # ~ AuxiliaryWeapon_1 text
+                    EGP:egpText(16,""+AuxiliaryWeapon_1:acfAmmoType(),vec2(0*ScaleW,5*ScaleH))
+                    EGP:egpFont(16,Font,FontScale_Small)
+                    EGP:egpAlign(16,1)
+                    EGP:egpColor(16,Color)
+                    EGP:egpParent(16,32)
+                        # ~ AuxiliaryWeapon_1 circle
+                        EGP:egpCircle(17,vec2(0*ScaleW,-22*ScaleH),vec2(10*ScaleW,10*ScaleH))
+                        EGP:egpColor(17,vec4(255*!AuxiliaryWeapon_1:acfReady(),255*AuxiliaryWeapon_1:acfReady(),0,255))
+                        EGP:egpParent(17,16)
+            }
+            if( AuxiliaryWeapon_2 ){
+                # AuxiliaryWeapon_2 Box
+                EGP:egpRoundedBox(33,vec2(ResW/1-(100*ScaleW),ResH/1-(170*ScaleH)),vec2(80*ScaleW,80*ScaleH))
+                EGP:egpRadius(33,8)
+                EGP:egpColor(33,vec4(0,0,0,75))
+                    # ~ AuxiliaryWeapon_2s text
+                    EGP:egpText(18,""+AuxiliaryWeapon_2:acfAmmoType(),vec2(0*ScaleW,5*ScaleH))
+                    EGP:egpFont(18,Font,FontScale_Small)
+                    EGP:egpAlign(18,1)
+                    EGP:egpColor(18,Color)
+                    EGP:egpParent(18,33)
+                        # ~ AuxiliaryWeapon_2s circle
+                        EGP:egpCircle(19,vec2(0*ScaleW,-22*ScaleH),vec2(10*ScaleW,10*ScaleH))
+                        EGP:egpColor(19,vec4(255*!AuxiliaryWeapon_2:acfReady(),255*AuxiliaryWeapon_2:acfReady(),0,255))
+                        EGP:egpParent(19,18)
+            }
+            
+        ##########################################################################################   Alt Weapon theme ( Verbose :^) )
+        if( !Alternate_Weapon_Theme ){
+            # SecondaryGun AND Aux1 AND Aux2
+            if( SecondaryGun & AuxiliaryWeapon_1 & AuxiliaryWeapon_2 ){
+                # ~ SecondaryGun text
+                EGP:egpText(14,""+SecondaryGun:acfAmmoType(),vec2((-70*ScaleW),(5*ScaleH)))
+                EGP:egpFont(14,Font,FontScale_Small)
+                EGP:egpAlign(14,1)
+                EGP:egpColor(14,Color)
+                EGP:egpParent(14,13)
+                    # ~ SecondaryGun Count
+                    EGP:egpText(15,"----",vec2((0*ScaleW),(-35*ScaleH)))
+                    EGP:egpFont(15,Font,FontScale_Large)
+                    EGP:egpColor(15,vec4(255,0,0,255))
+                    EGP:egpAlign(15,1)
+                    EGP:egpParent(15,14)          
+                    if(SecondaryGun:acfAmmoCount() == 0){EGP:egpSetText(15,"----")}
+                    if(SecondaryGun:acfAmmoCount() >> 0){EGP:egpSetText(15,""+(SecondaryGun:acfAmmoCount()))}
+                        if( !SecondaryGun:acfReady()  || SecondaryGun:acfAmmoCount() == 0 ){
+                            EGP:egpColor(15,vec4(255,0,0,255))
+                        }
+                        elseif( SecondaryGun:acfReady() )
+                        {
+                            EGP:egpColor(15,vec4(0,255,0,255))
+                        }
+                        EGP:egpRemove(32)
+                        EGP:egpRemove(33)
+                        # ~ AuxiliaryWeapon_1 text
+                        EGP:egpText(16,""+AuxiliaryWeapon_1:acfAmmoType(),vec2(0*ScaleW,5*ScaleH))
+                        EGP:egpFont(16,Font,FontScale_Small)
+                        EGP:egpAlign(16,1)
+                        EGP:egpColor(16,Color)
+                        EGP:egpParent(16,13)
+                            # ~ AuxiliaryWeapon_2 text
+                            EGP:egpText(18,""+AuxiliaryWeapon_2:acfAmmoType(),vec2(70*ScaleW,5*ScaleH))
+                            EGP:egpFont(18,Font,FontScale_Small)
+                            EGP:egpAlign(18,1)
+                            EGP:egpColor(18,Color)
+                            EGP:egpParent(18,13)
+                    # SecondGun AND Aux1 OR Aux2
+            }elseif( SecondaryGun & (AuxiliaryWeapon_1 | AuxiliaryWeapon_2) ){
+                EGP:egpRoundedBox(13,vec2(ResW/1-(430*ScaleW),ResH/1-(65*ScaleH)),vec2(243*ScaleW,80*ScaleH))
+                EGP:egpRadius(13,8)
+                EGP:egpColor(13,vec4(0,0,0,75)) 
+                    # ~ SecondaryGun text
+                    EGP:egpText(14,""+SecondaryGun:acfAmmoType(),vec2((-45*ScaleW),(5*ScaleH)))
+                    EGP:egpFont(14,Font,FontScale_Small)
+                    EGP:egpAlign(14,1)
+                    EGP:egpColor(14,Color)
+                    EGP:egpParent(14,13)
+                        # ~ SecondaryGun Count
+                        EGP:egpText(15,"----",vec2((0*ScaleW),(-35*ScaleH)))
+                        EGP:egpFont(15,Font,FontScale_Large)
+                        EGP:egpColor(15,vec4(255,0,0,255))
+                        EGP:egpAlign(15,1)
+                        EGP:egpParent(15,14)          
+                        if(SecondaryGun:acfAmmoCount() == 0){EGP:egpSetText(15,"----")}
+                        if(SecondaryGun:acfAmmoCount() >> 0){EGP:egpSetText(15,""+(SecondaryGun:acfAmmoCount()))}
+                            if( !SecondaryGun:acfReady()  || SecondaryGun:acfAmmoCount() == 0 ){
+                                EGP:egpColor(15,vec4(255,0,0,255))
+                            }
+                            elseif( SecondaryGun:acfReady() )
+                            {
+                                EGP:egpColor(15,vec4(0,255,0,255))
+                            }
+                                EGP:egpRemove(32)
+                                EGP:egpRemove(33)
+                                    # ~ AuxiliaryWeapon_1 text
+                                    EGP:egpText(16,""+AuxiliaryWeapon_1:acfAmmoType(),vec2(45*ScaleW,5*ScaleH))
+                                    EGP:egpFont(16,Font,FontScale_Small)
+                                    EGP:egpAlign(16,1)
+                                    EGP:egpColor(16,Color)
+                                    EGP:egpParent(16,13)
+                                        # ~ AuxiliaryWeapon_2 text
+                                        EGP:egpText(18,""+AuxiliaryWeapon_2:acfAmmoType(),vec2(45*ScaleW,5*ScaleH))
+                                        EGP:egpFont(18,Font,FontScale_Small)
+                                        EGP:egpAlign(18,1)
+                                        EGP:egpColor(18,Color)
+                                        EGP:egpParent(18,13)
+                    # Aux1 AND Aux2
+            }elseif( AuxiliaryWeapon_1 & AuxiliaryWeapon_2 ){
+                EGP:egpRoundedBox(13,vec2(ResW/1-(430*ScaleW),ResH/1-(65*ScaleH)),vec2(243*ScaleW,80*ScaleH))
+                EGP:egpRadius(13,8)
+                EGP:egpColor(13,vec4(0,0,0,75))
+                    EGP:egpRemove(32)
+                    EGP:egpRemove(33)
+                        # ~ AuxiliaryWeapon_1 text
+                        EGP:egpText(16,""+AuxiliaryWeapon_1:acfAmmoType(),vec2(-45*ScaleW,5*ScaleH))
+                        EGP:egpFont(16,Font,FontScale_Small)
+                        EGP:egpAlign(16,1)
+                        EGP:egpColor(16,Color)
+                        EGP:egpParent(16,13)
+                            # ~ AuxiliaryWeapon_2 text
+                            EGP:egpText(18,""+AuxiliaryWeapon_2:acfAmmoType(),vec2(45*ScaleW,5*ScaleH))
+                            EGP:egpFont(18,Font,FontScale_Small)
+                            EGP:egpAlign(18,1)
+                            EGP:egpColor(18,Color)
+                            EGP:egpParent(18,13)
+                    # Aux1 OR Aux2
+            }elseif( AuxiliaryWeapon_1 | AuxiliaryWeapon_2 ){
+                TinyBox = 1
+                EGP:egpRoundedBox(13,vec2(ResW/1-(350*ScaleW),ResH/1-(65*ScaleH)),vec2(80*ScaleW,80*ScaleH))
+                EGP:egpRadius(13,8)
+                EGP:egpColor(13,vec4(0,0,0,75))
+                    EGP:egpRemove(32)
+                    EGP:egpRemove(33)
+                        # ~ AuxiliaryWeapon_1 text
+                        EGP:egpText(16,""+AuxiliaryWeapon_1:acfAmmoType(),vec2(0*ScaleW,5*ScaleH))
+                        EGP:egpFont(16,Font,FontScale_Small)
+                        EGP:egpAlign(16,1)
+                        EGP:egpColor(16,Color)
+                        EGP:egpParent(16,13)
+                            # ~ AuxiliaryWeapon_2 text
+                            EGP:egpText(18,""+AuxiliaryWeapon_2:acfAmmoType(),vec2(0*ScaleW,5*ScaleH))
+                            EGP:egpFont(18,Font,FontScale_Small)
+                            EGP:egpAlign(18,1)
+                            EGP:egpColor(18,Color)
+                            EGP:egpParent(18,13)
+                        # SecondaryGun
+                }elseif( SecondaryGun ){
+                TinyBox = 1
+                EGP:egpRoundedBox(13,vec2(ResW/1-(350*ScaleW),ResH/1-(65*ScaleH)),vec2(80*ScaleW,80*ScaleH))
+                EGP:egpRadius(13,8)
+                EGP:egpColor(13,vec4(0,0,0,75))
+                    EGP:egpRemove(32)
+                    EGP:egpRemove(33)
+                        # ~ SecondaryGun text
+                        EGP:egpText(14,""+SecondaryGun:acfAmmoType(),vec2((0*ScaleW),(5*ScaleH)))
+                        EGP:egpFont(14,Font,FontScale_Small)
+                        EGP:egpAlign(14,1)
+                        EGP:egpColor(14,Color)
+                        EGP:egpParent(14,13)
+                            # ~ SecondaryGun Count
+                            EGP:egpText(15,"----",vec2((0*ScaleW),(-35*ScaleH)))
+                            EGP:egpFont(15,Font,FontScale_Large)
+                            EGP:egpColor(15,vec4(255,0,0,255))
+                            EGP:egpAlign(15,1)
+                            EGP:egpParent(15,14)          
+                                if(SecondaryGun:acfAmmoCount() == 0){EGP:egpSetText(15,"----")}
+                                if(SecondaryGun:acfAmmoCount() >> 0){EGP:egpSetText(15,""+(SecondaryGun:acfAmmoCount()))}
+                                    if( !SecondaryGun:acfReady()  || SecondaryGun:acfAmmoCount() == 0 ){
+                                        EGP:egpColor(15,vec4(255,0,0,255))
+                                    }
+                                    elseif( SecondaryGun:acfReady() )
+                                    {
+                                        EGP:egpColor(15,vec4(0,255,0,255))
+                                    }
+                }
+        }
+    
+        ########################################################################################## Re-Position HUD Elements ( Its Ugly...)
+        # Secondary Large Box
+        if( !PrimaryGun & EGP:egpHasObject(13) ){
+            EGP:egpPos(13,vec2(ResW/1-(150*ScaleW),ResH/1-(67*ScaleH)))
+            }
+        # Secondary Tiny Box
+        if( !PrimaryGun & ( !SecondaryGun | SecondaryGun ) & TinyBox & ( !AuxiliaryWeapon_1 | !AuxiliaryWeapon_2 ) ){
+            EGP:egpPos(13,vec2(ResW/1-(70*ScaleW),ResH/1-(67*ScaleH)))
+        } 
+        # Aux Weps Large 
+        if( !PrimaryGun & !SecondaryGun & AuxiliaryWeapon_1 & AuxiliaryWeapon_2 ){
+             EGP:egpPos(32,vec2(ResW/1-(170*ScaleW),ResH/1-(67*ScaleH)))
+             EGP:egpPos(33,vec2(ResW/1-(70*ScaleW),ResH/1-(67*ScaleH)))
+        }
+        # Aux Weps Large ONE
+        if( !PrimaryGun & !SecondaryGun & ( !AuxiliaryWeapon_1 | !AuxiliaryWeapon_2 ) ){
+             EGP:egpPos(32,vec2(ResW/1-(70*ScaleW),ResH/1-(67*ScaleH)))
+             EGP:egpPos(33,vec2(ResW/1-(70*ScaleW),ResH/1-(67*ScaleH)))
+        }
+        
+        # Aux Weps Large Left with ONE Wep
+        if( (PrimaryGun | SecondaryGun) & AuxiliaryWeapon_1 & !AuxiliaryWeapon_2 ){
+             EGP:egpPos(32,vec2(ResW/1-(100*ScaleW),ResH/1-(170*ScaleH)))
+        }
+        
+        # Reposition Engine elements
+        if( Enable_GmodHUD ){
+            # Large Box RPM
+            EGP:egpPos(100,vec2(ResW/1-(1770*ScaleW),ResH/1-(170*ScaleH)))
+                # Large Box Speed AND Gear
+                #EGP:egpPos(113,vec2(ResW/1-(1483*ScaleW),ResH/1-(170*ScaleH)))
+                
+            if( Engine ){
+                # Tiny Box Speed AND Gear
+                EGP:egpPos(150,vec2(ResW/1-(1565*ScaleW),ResH/1-(170*ScaleH)))
+                # Large Box Speed AND Gear
+                EGP:egpPos(113,vec2(ResW/1-(1483*ScaleW),ResH/1-(170*ScaleH)))
+            }else{
+                EGP:egpPos(150,vec2(ResW/1-(1845*ScaleW),ResH/1-(170*ScaleH)))
+                # Large Box Speed AND Gear
+                EGP:egpPos(113,vec2(ResW/1-(1770*ScaleW),ResH/1-(170*ScaleH)))
+            }
+
+        }
+        # Reposition Engine elemnts again
+        if( !PrimaryGun & !SecondaryGun & !AuxiliaryWeapon_1 & !AuxiliaryWeapon_2 ){
+            
+            if( Alternate_Engine_Theme ){
+                if( Engine ){
+                    # Large Box RPM
+                    EGP:egpPos(100,vec2(ResW/1-(150*ScaleW),ResH/1-(67*ScaleH)))
+                    # Large Box Speed AND Gear
+                    EGP:egpPos(113,vec2(ResW/1-(430*ScaleW),ResH/1-(67*ScaleH)))
+                    # Tiny Box Speed AND Gear
+                    EGP:egpPos(150,vec2(ResW/1-(350*ScaleW),ResH/1-(65*ScaleH)))
+                }else{
+                    # Large Box RPM
+                    EGP:egpPos(100,vec2(ResW/1-(150*ScaleW),ResH/1-(67*ScaleH)))
+                    # Large Box Speed AND Gear
+                    EGP:egpPos(113,vec2(ResW/1-(150*ScaleW),ResH/1-(67*ScaleH)))
+                    # Tiny Box Speed AND Gear
+                    EGP:egpPos(150,vec2(ResW/1-(70*ScaleW),ResH/1-(65*ScaleH)))
+                }
+                
+            }
+            elseif( !Alternate_Engine_Theme ){
+                    # Large Box RPM
+                    EGP:egpPos(100,vec2(ResW/1-(150*ScaleW),ResH/1-(67*ScaleH)))
+                    # Tiny Box Speed AND Gear
+                    EGP:egpPos(150,vec2(ResW/1-(70*ScaleW),ResH/1-(65*ScaleH)))
+            }
+            
+        }
+    }
+    Speedometer = 1
+    
+    function void drawHolos(){
+        if( CamController ){
+            # Create CamController Holo
+            holoCreate(1)
+                if( TurretBase ){
+                    holoParent(1,TurretBase)
+                }else{
+                    holoParent(1,Baseplate)
+                }
+            if( Debug ){
+                holoAlpha(1,255)
+                holoShadow(1,0)
+                holoVisible(1,players(),1)
+                holoModel(1,"models/editor/camera.mdl")
+                holoScale(1,vec(0.25,0.25,0.25))
+            }elseif( !Debug ){
+                holoAlpha(1,0)
+                holoShadow(1,0)
+                holoVisible(1,players(),0)
+                holoVisible(1,Chair:driver(),0)
+                holoScale(1,vec(1,1,1))
+            }
+        
+            # Parent CamController to Holo
+            Parent = holoEntity(1)
+            CamController["Parent",entity] = Parent
+            
+            if( Compass ){
+                # ~ Baseplate angle holo ~ #
+                holoCreate(3)
+                holoPos(3,Parent:toWorld(vec(0,0,-2)))
+                holoModel(3,"cone")
+                holoDisableShading(3,1)
+                holoColor(3,vec(100,100,100))
+                holoMaterial(3,"models/debug/debugwhite")
+                holoParent(3,Parent)
+                holoVisible(3,players(),0)
+                holoScale(3,(vec(0.005*CompassThickness,0.1*CompassScale,0.25*CompassScale)))
+                holoShadow(3,0)
+                
+                # ~ PrimaryGun angle holo ~ #
+                holoCreate(4)
+                holoPos(4,Parent:toWorld(vec(0,0,-1.5)))
+                holoModel(4,"cone")
+                holoDisableShading(4,1)
+                #holoColor(4,vec(75,75,75))
+                holoMaterial(4,"models/debug/debugwhite")
+                holoParent(4,Parent)
+                holoVisible(4,players(),0)
+                holoScale(4,(vec(0.005*CompassThickness,0.1*CompassScale,0.25*CompassScale)))
+                holoShadow(4,0)
+            }
+        }
+
+        # ~ PrimaryGun Crosshair
+        if( PrimaryGunAimpoint ){
+            holoCreate(2)
+            holoVisible(2,players(),0)
+            holoAlpha(2,0)
+            holoShadow(2,0)
+        }
+        
+        # ~ SecondaryGun Crosshair
+        if( SecondaryGunAimpoint ){
+            holoCreate(40)
+            holoVisible(40,players(),0)
+            holoAlpha(40,0)
+            holoShadow(40,0)
+        }   
+    }
+
+    function void printStuff(){
+        if( Debug ){
+             print("------ VH HUD: Entities Found printed in console ------")
+             print( _HUD_PRINTCONSOLE,"-------------------------------------------------------" )
+             print( _HUD_PRINTCONSOLE,"--- Baseplate           " + Baseplate:model() )
+             print( _HUD_PRINTCONSOLE,"--- TurretBase          " + TurretBase:model() )
+             print( _HUD_PRINTCONSOLE,"--- Engine              " + Engine:acfName() )
+             print( _HUD_PRINTCONSOLE,"--- Primary             " + PrimaryGun:acfName() )
+             print( _HUD_PRINTCONSOLE,"--- Secondary           " + SecondaryGun:acfName() )
+             print( _HUD_PRINTCONSOLE,"--- AuxiliaryWeapon_1   " + AuxiliaryWeapon_1:acfName() )
+             print( _HUD_PRINTCONSOLE,"--- AuxiliaryWeapon_2   " + AuxiliaryWeapon_2:acfName() )
+             print( _HUD_PRINTCONSOLE,"-------------------------------------------------------")
+        }else{
+            if( PrintControls ){
+                foreach(K,V:string=Controls){
+                    Chair:printDriver(3,V)
+                }
+            }
+        }
+    }
+}
+
+#####################################################################################################################################
+# INITIALIZATION OVER # INITIALIZATION OVER # INITIALIZATION OVER # INITIALIZATION OVER # INITIALIZATION OVER # INITIALIZATION OVER #
+#####################################################################################################################################
+
+###################################################################################################################################
+# RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP # RENDER MAP #
+###################################################################################################################################
+if( changed(MiniMap)&MiniMap ){
+    #include "gtmp3_lib"
+    GTMPScreen = MiniMap_Screen
+    runOnTick(1)
+    #interval(1)
+    Render = 1
+}
+
+if( changed(GTMP_State)&GTMP_State == "idle" ){
+    runOnTick(0)
+    #interval(200)
+    Render = 0
+}
+
+if( changed(Render)&Render | tickClk() ){
+    GTMPScreen:gtmp(70,0,GTMP_Screen_Grid,GTMP_Monochrome)
+}
+
+###############################################################################################################################
+# PHASE 1: PODACTIVE # PHASE 1: PODACTIVE # PHASE 1: PODACTIVE # PHASE 1: PODACTIVE # PHASE 1: PODACTIVE # PHASE 1: PODACTIVE #
+###############################################################################################################################
+if( changed(Active)&Active ){
+
+    drawHolos()
+    
+    # Hide Compass Holos
+    holoAlpha(3,0)
+    holoAlpha(4,0)
+        
+    # Filter for HoloCrosshairs
+    rangerFilter(PrimaryGun)
+    rangerFilter(SecondaryGun)
+    rangerPersist(1)
+    
+    # Purge STANK
+    soundPurge()
+    EGP:egpClear()
+    EGP:egpResolution(vec2(),vec2(512))
+    EGP:egpDrawTopLeft(0)
+
+    # ~ Scale EGP based on (PilotsResolutionHeight) / (ResolutionHeight it was built for (1080p))
+    # ~ This scaling method allows us to use nice whole numbers to scale the EGP
+    # ~ Shamelessly ripped from DakTek HUD <3
+    ScaleW = egpScrW(Chair:driver()) / 1920
+    ScaleH = egpScrH(Chair:driver()) / 1080
+    #ScaleW = ScaleH
+    ResW = egpScrW(Chair:driver())
+    ResH = egpScrH(Chair:driver())
+    
+    # ~ Scale font based on ResolutionHeight (I hate this, but it works...)
+    Font = ""
+    FontScale_Small = ScaleH * 20
+    FontScale_Large = ScaleH * 25
+    FontScale_VeryLarge = ScaleH * 65
+
+    Color = vec4(255,235,0,255)
+    
+    Update = 0
+    
+    # ~ Start Timers for intro sequence, else Skip
+    if( Intro ){
+        timer("boot1",IntroDisconnected)
+        timer("boot2",IntroConnecting)
+        PodController["Hide HUD",number] = 1
+        CamController["Activated",number] = 0
+        EGP:egpBox( 5,vec2(ResW/2,ResH/2),vec2(ResW,ResH) )
+        EGP:egpMaterial(5,Disconnected_Mat)
+        Baseplate:soundPlay("disconnected",0,Disconnected)
+    }elseif( !Intro ){
+        Update = 1
+    }
+}
+        if( clk("boot1") ){
+            CamController["Activated",number] = 1
+            CamController["Position",vector] = Position
+            holoAlpha(3,0)
+            holoAlpha(4,0)
+            EGP:egpMaterial(5,Connecting_Mat)
+            Baseplate:soundPlay("connecting1",2,Connecting1)
+            Baseplate:soundPlay("connecting2",0,Connecting2)
+            stoptimer("boot1")
+        }
+        if( clk("boot2") ){
+            Update = 1
+            holoAlpha(3,255)
+            holoAlpha(4,255)
+            EGP:egpRemove(5)
+            soundPurge()
+            Baseplate:soundPlay("success1",0,Success1)
+            Baseplate:soundPlay("success2",0,Success2)
+            stoptimer("boot2")
+        }
+
+###############################################################################################################################
+# PHASE 2: UPDATE # PHASE 2: UPDATE # PHASE 2: UPDATE # PHASE 2: UPDATE # PHASE 2: UPDATE # PHASE 2: UPDATE # PHASE 2: UPDATE #
+###############################################################################################################################
+if( changed(Update)&Update ){
+    
+    ActiveOutput = 1
+    
+    Baseplate:soundPlay("on",0,EnterSound)
+    soundVolume("on",EnterSoundVolume)
+    soundPitch("on",EnterSoundPitch)
+    
+    RTcamera["Activate",number] = 1              
+    CamController["Activated",number] = 1  
+        
+    printStuff()
+
+}
+if( changed(Update)&!Update ){
+    RTcamera["Activate",number] = 0 
+}
+
+###############################################################################################################################
+# UPDATE SLOW # UPDATE SLOW # UPDATE SLOW # UPDATE SLOW # UPDATE SLOW # UPDATE SLOW # UPDATE SLOW # UPDATE SLOW # UPDATE SLOW #
+###############################################################################################################################
+if( clk() ){
+    
+    # Update HUD based on entities changed
+        # yo, this is dumb
+    if( changed( Update + Baseplate:model() +TurretBase:model() + Engine:model() + Speedometer + Gearbox:model() + PrimaryGun:model() + SecondaryGun:model() + AuxiliaryWeapon_1:model() + AuxiliaryWeapon_2:model() )&Update ){
+        drawEGP()
+        }
+        
+    # Update HoloAlpha on Zoom or thirdPerson
+    if( changed(Update + ThirdPerson + Zoom) ){
+        if( ThirdPerson &!Zoom ){
+            holoAlpha(3,0)
+            holoAlpha(4,0)
+        }else{
+            holoAlpha(3,255)
+            holoAlpha(4,255)
+        }
+    }
+            
+    # ~ Hide HUD on FirstPerson
+        # This is some wacky ass bullshit.
+        # I hade to cobble ThirdPerson & Zoom into
+        # different elements to get this to update correctly :(
+        # Performance suffered slightly from implementing this but oh well..
+    if( changed(Update + ThirdPerson + Zoom)&!Enable_FirstPersonHUD ){
+        if( !ThirdPerson & !Zoom ){
+            PodController["Hide HUD",number] = 1
+            EGP:egpClear()
+            holoAlpha(3,0)
+            holoAlpha(4,0)
+        }else{
+            PodController["Hide HUD",number] = 0
+            drawEGP()
+            #holoAlpha(3,255)
+            #holoAlpha(4,255)
+        }
+    }
+        
+    # Update Holos based on available entities
+    if(changed(Update + TurretBase:model() + Baseplate:model() + PrimaryGun:model() + SecondaryGun:model())&Update){
+        if(TurretBase){ holoParent(1,TurretBase) }else{ holoParent(1,Baseplate) }
+        
+        if(!Baseplate){ holoDelete(3) }
+        if(!TurretBase){ holoDelete(4) }    
+    }
+
+    # ~ Update CompassHolos visibility
+    if( changed(Chair:driver()) ){
+        if( Chair:driver() ){
+            holoVisible(3,Chair:driver(),1)
+            holoVisible(4,Chair:driver(),1)
+        }elseif( !Chair:driver() ){
+            holoVisible(3,players(),0)
+            holoVisible(4,players(),0)
+        }
+    }
+        
+    # ~ Update CompassTurret Material
+    if( changed(ThirdPerson + Zoom + Update + Turret_Weld) ){
+        if( Turret_Weld ){
+            #Primary
+            EGP:egpAlpha(21,0)                  #pointer solid
+            EGP:egpAlpha(34,AimpointOpacity)    #pointer hollow
+            EGP:egpColor(34,EGP:egpColor(21))   #pointer hollow color
+            #Secondary
+            EGP:egpAlpha(42,0)                  #pointer solid
+            EGP:egpAlpha(43,AimpointOpacity)    #pointer hollow
+            EGP:egpColor(43,EGP:egpColor(42))   #pointer hollow color
+                       
+            holoMaterial(4,"models/wireframe")
+        }elseif( !Turret_Weld ){
+            #Primary
+            EGP:egpAlpha(21,AimpointOpacity)    #pointer solid
+            EGP:egpAlpha(34,0)                  #pointer hollow
+            EGP:egpColor(34,EGP:egpColor(21))   #pointer hollow color
+            #Secondary
+            EGP:egpAlpha(42,AimpointOpacity)    #pointer solid
+            EGP:egpAlpha(43,0)                  #pointer hollow
+            EGP:egpColor(43,EGP:egpColor(42))   #pointer hollow color
+            
+            holoMaterial(4,"models/debug/debugwhite")
+        }
+    }
+    
+    # ~ Update CompassBaseplate Material
+    if( changed(Update + Track_Weld) ){
+        if( Track_Weld ){
+            holoMaterial(3,"models/wireframe")
+        }elseif( !Track_Weld ){
+            holoMaterial(3,"models/debug/debugwhite")
+        }
+    }
+    
+    if( changed(Update + GTMP_State)&GTMP_State == "idle" ){
+        # Update MiniMap Material
+        EGP:egpMaterialFromScreen(28,MiniMap_Screen:entity())
+    } 
+           
+    # ~ Update MiniMap
+    if( MiniMap ){
+
+        if( GTMP_Screen_Beacon ){
+            Locations = array(Baseplate:pos())
+            gtmp_trackCoordinates(77,Locations)
+        }
+        
+        if( VehicleBeacon ){
+            # Find vehicle WorldPosition, adjust based on MiniMap_Scale
+            Vector = Baseplate:pos() / (VechielBeaconRatio/MiniMap_Scale)
+            
+            # Split X & Y
+            VectorX = clamp(Vector:x(),-140,140)
+            VectorY = clamp(Vector:y(),-140,140)
+            
+            # Update Vehicle Beacon
+            EGP:egpPos(30, vec2(-VectorX*ScaleW,VectorY*ScaleH) )
+            EGP:egpAngle(30,(-Baseplate:angles():yaw()+90))
+        }
+    }
+    
+    # TODO: Find a more elegant solution to this!
+    # ~ Car stuff
+    if(changed(ThirdPerson + Zoom + Update + Gearbox:acfGear())){
+        if (Gearbox:acfGear() == 0){EGP:egpSetText(117,"N")}
+        elseif (Gearbox:acfGear() == 1){EGP:egpSetText(117,"1")}
+        elseif (Gearbox:acfGear() == 2){EGP:egpSetText(117,"2")}
+        elseif (Gearbox:acfGear() == 3){EGP:egpSetText(117,"3")} 
+        elseif (Gearbox:acfGear() == 4){EGP:egpSetText(117,"4")}
+        elseif (Gearbox:acfGear() == 5){EGP:egpSetText(117,"5")}
+        elseif (Gearbox:acfGear() == 6){EGP:egpSetText(117,"6")}
+    }
+
+    if(changed(ThirdPerson + Zoom + Update + Engine:acfRPM())){
+        # Alternate_Engine_Theme ON
+        if( Alternate_Engine_Theme ){
+            if( Engine:acfRPM()>Engine:acfRedline()/10 ){ EGP:egpAlpha(101,255) }else{ EGP:egpAlpha(101,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/9 ){ EGP:egpAlpha(102,255) }else{ EGP:egpAlpha(102,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/8 ){ EGP:egpAlpha(103,255) }else{ EGP:egpAlpha(103,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/7 ){ EGP:egpAlpha(104,255) }else{ EGP:egpAlpha(104,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/6 ){ EGP:egpAlpha(105,255) }else{ EGP:egpAlpha(105,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/5 ){ EGP:egpAlpha(106,255) }else{ EGP:egpAlpha(106,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/4 ){ EGP:egpAlpha(107,255) }else{ EGP:egpAlpha(107,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/3 ){ EGP:egpAlpha(108,255) }else{ EGP:egpAlpha(108,50) }
+            if( Engine:acfRPM()>Engine:acfRedline()/2 ){ EGP:egpAlpha(109,255) }else{ EGP:egpAlpha(109,50) }
+            if( Engine:acfRPM()==Engine:acfRedline() ){ EGP:egpAlpha(110,255) }else{ EGP:egpAlpha(110,50) }
+        # Alternate_Engine_Theme OFF
+        }else{
+            if ( !Engine:acfActive()                         ){EGP:egpColor(101,vec(100,100,100))}
+            if ( Engine:acfRPM() == Engine:acfIdleRPM()      ){EGP:egpColor(101,vec(0,255,0))}
+            if ( Engine:acfRPM() >= Engine:acfPowerbandMin() ){EGP:egpColor(101,vec(255,255,0))}
+            if ( Engine:acfRPM() >= Engine:acfPowerbandMax() ){EGP:egpColor(101,vec(255,127,0))}
+            if ( Engine:acfRPM() == Engine:acfRedline()      ){EGP:egpColor(101,vec(255,0,0))}
+        }
+    }
+    #if( changed(Engine:acfRPM())&Engine:acfRPM()==0 ){
+    #    foreach(O,P:number = EngineRPM){
+    #        #print( O )
+    #        #print( P )
+    #        EGP:egpAlpha(P,0)
+    #        }
+    #}
+    
+    # Speedometer
+    if( Speedometer ){
+        Speed = toUnit(Speed_Mode,Baseplate:vel():length())
+        if(changed(ThirdPerson + Zoom + Update + Speed)){
+            EGP:egpSetText(115,""+floor(Speed))
+        }
+    }
+    
+    # ~ Update PrimaryGun
+    # Changed AmmoType
+    if( changed(PrimaryGun:acfAmmoType())&PrimaryGun:acfAmmoType() ){
+        EGP:egpSetText(7,""+PrimaryGun:acfAmmoType())
+        Chair:hintDriver("Primary Loaded: "+PrimaryGun:acfAmmoType(),35)
+        Baseplate:soundPlay("Reload1",0,Primary_ChangeAmmo)
+    }
+        # Ammo Counter
+        if(changed(ThirdPerson + Zoom + Update + PrimaryGun:acfAmmoCount())&PrimaryGun:acfAmmoCount() >> 0){
+            EGP:egpSetText(8,""+(PrimaryGun:acfAmmoCount()))
+        }
+        elseif(ThirdPerson + Zoom + Update + PrimaryGun:acfAmmoCount() == 0){
+            EGP:egpSetText(8,"----")
+        }
+        
+            # Change color to Yellow at reload half-way point
+            if( changed(ThirdPerson  + Update + PrimaryGun:acfReloadProgress())&round(PrimaryGun:acfReloadProgress(),1) == 0.5 ){
+                #Primary
+                EGP:egpColor(21,vec( 255, 255, 0 ))  #pointer Solid
+                EGP:egpColor(34,EGP:egpColor(21))    #pointer hollow
+                holoColor(4,vec( 255, 255, 0 ))      #compass
+                EGP:egpColor(8,vec( 255, 255, 0 ))   #ammo count
+            }
+            # Change color to Green / Red if ready
+            elseif( changed(ThirdPerson + Update + PrimaryGun:acfReady()) ){
+                #Primary
+                EGP:egpColor(21,vec( 255*( !PrimaryGun:acfReady() ), 255*( PrimaryGun:acfReady() ), 0 ))  #pointer solid
+                EGP:egpColor(34,EGP:egpColor(21))                                                         #pointer hollow
+                holoColor(4,vec( 255*( !PrimaryGun:acfReady() ), 255*( PrimaryGun:acfReady() ), 0 ))      #compass
+                EGP:egpColor(8,vec( 255*!PrimaryGun:acfReady(), 255*PrimaryGun:acfReady(), 0 ))           #ammo count
+            }
+
+    # ~ Update SecondaryGun
+    # ~ Changed AmmoType
+    if( changed(SecondaryGun:acfAmmoType())&SecondaryGun:acfAmmoType() ){
+        EGP:egpSetText(14,""+SecondaryGun:acfAmmoType())
+        Chair:hintDriver("Secondary Loaded: "+SecondaryGun:acfAmmoType(),35)
+        Baseplate:soundPlay("Reload2",0,Secondary_ChangeAmmo)
+    }
+        # Ammo Counter
+        if(changed(ThirdPerson + Zoom + Update + SecondaryGun:acfAmmoCount())&SecondaryGun:acfAmmoCount() >> 0){
+            EGP:egpSetText(15,""+(SecondaryGun:acfAmmoCount()))
+        }elseif(Update + SecondaryGun:acfAmmoCount() == 0){
+            EGP:egpSetText(15,"----")
+        }
+            # Change color to Yellow at reload half-way point
+            if( changed(ThirdPerson + Zoom + Update + SecondaryGun:acfReloadProgress())&round(SecondaryGun:acfReloadProgress(),1) == 0.5 ){
+                EGP:egpColor(15,vec( 255, 255, 0 ))
+                EGP:egpColor(42,vec( 255, 255, 0 ))  #pointer Solid
+                EGP:egpColor(43,EGP:egpColor(42))    #pointer hollow
+            }
+            # Change color to Green / Red if ready
+            elseif( changed(ThirdPerson + Zoom + Update + SecondaryGun:acfReady()) ){
+                EGP:egpColor(15,vec( 255*!SecondaryGun:acfReady(), 255*SecondaryGun:acfReady(), 0 ))
+                EGP:egpColor(42,vec( 255*( !SecondaryGun:acfReady() ), 255*( SecondaryGun:acfReady() ), 0 ))  #pointer solid
+                EGP:egpColor(43,EGP:egpColor(42))                                                             #pointer hollow
+            }
+
+    # ~ Update AuxiliaryWeapon_1
+    # ~ Changed AmmoType
+    if( changed(AuxiliaryWeapon_1:acfAmmoType())&AuxiliaryWeapon_1:acfAmmoType() ){
+        EGP:egpSetText(16,""+AuxiliaryWeapon_1:acfAmmoType())
+        Chair:hintDriver("Auxiliary 1 Loaded: "+AuxiliaryWeapon_1:acfAmmoType(),35)
+        Baseplate:soundPlay("Reload3",0,Auxiliary1_ChangeAmmo)
+    }
+        # Change color to Yellow at reload half-way point
+        if( changed(ThirdPerson + Zoom + Update + AuxiliaryWeapon_1:acfReloadProgress())&round(AuxiliaryWeapon_1:acfReloadProgress(),1) == 0.5 ){
+            EGP:egpColor(17,vec( 255, 255, 0 ))
+        }
+        # Change color to Green / Red if ready
+        elseif( changed(ThirdPerson + Zoom + Update + AuxiliaryWeapon_1:acfReady()) ){
+            EGP:egpColor(17,vec( 255*!AuxiliaryWeapon_1:acfReady(), 255*AuxiliaryWeapon_1:acfReady(), 0 ))
+        }
+
+    # ~ Update AuxiliaryWeapon_2
+    # ~ Changed AmmoType
+    if( changed(AuxiliaryWeapon_2:acfAmmoType())&AuxiliaryWeapon_2:acfAmmoType() ){
+        EGP:egpSetText(18,""+AuxiliaryWeapon_2:acfAmmoType())
+        Chair:hintDriver("Auxiliary 1 Loaded: "+AuxiliaryWeapon_2:acfAmmoType(),35)
+        Baseplate:soundPlay("Reload4",0,Auxiliary2_ChangeAmmo)
+    }
+        # Change color to Yellow at reload half-way point
+        if( changed(ThirdPerson + Zoom + Update + AuxiliaryWeapon_2:acfReloadProgress())&round(AuxiliaryWeapon_2:acfReloadProgress(),1) == 0.5 ){
+            EGP:egpColor(19,vec( 255, 255, 0 ))
+        }
+        # Change color to Green / Red if ready
+        elseif( changed(ThirdPerson + Zoom + Update + AuxiliaryWeapon_2:acfReady()) ){
+            EGP:egpColor(19,vec( 255*!AuxiliaryWeapon_2:acfReady(), 255*AuxiliaryWeapon_2:acfReady(), 0 ))
+        }
+    
+    # Update Cam on Entities
+    if( changed( Update + TurretBase:model() + Baseplate:model() )&!TurretBase &!Baseplate ){
+        CamController["Activated",number] = 0
+    }
+    
+    # ~ Exiting the seat
+    if( changed(Active)&!Active ){
+            Baseplate:soundPlay("off",0,ExitSound)
+            soundVolume("off",ExitSoundVolume)
+            soundPitch("off",ExitSoundPitch)
+        EGP:egpClear()
+        ActiveOutput = 0
+        Update = 0
+    }
+#}
+###############################################################################################################################
+# UPDATE FAST # UPDATE FAST # UPDATE FAST # UPDATE FAST # UPDATE FAST # UPDATE FAST # UPDATE FAST # UPDATE FAST # UPDATE FAST #
+###############################################################################################################################
+
+    # ~ Update Cam on ThirdPerson
+    if( changed(ThirdPerson + Zoom) ){
+        if( ThirdPerson ){
+            if( TurretBase ){
+                CamController["Distance",number] = TurretBase_ThirdPersonDistanceMod
+            }elseif( Baseplate ){
+                CamController["Distance",number] = Baseplate_ThirdPersonDistanceMod
+            }
+        }else{
+            CamController["Distance",number] = 5
+        }
+    }
+    
+    # ~ Update Holo position if ZoomOn
+        if( Zoom ){
+            Angle = CamController["Angle",angle] = Chair:toLocal(Chair:driver():eyeAngles())
+                # Zoom Position based on TurretBase, unless its gone
+                if( TurretBase ){
+                    Position = CamController["Position",vector] = TurretBase:toWorld(ZoomOffset)
+                }else{
+                    Position = CamController["Position",vector] = Baseplate:toWorld(Baseplate_FirstPersonOffset)
+                }
+            CamController["Distance",number] = ZoomDistanceMod
+            CamController["FOV",number] = ZoomFOV
+            EGP:egpAlpha(23,255)
+            EGP:egpAlpha(24,255)
+    # Update Holo & CamController position if zoomOff
+        }else{
+            Angle = CamController["Angle",angle] = Chair:toLocal(Chair:driver():eyeAngles())
+                if( TurretBase ){
+                    Position = CamController["Position",vector] = TurretBase:toWorld(ThirdPerson ? TurretBase_ThirdPersonOffset : TurretBase_FirstPersonOffset)
+                }else{
+                    Position = CamController["Position",vector] = Baseplate:toWorld(ThirdPerson ? Baseplate_ThirdPersonOffset : Baseplate_FirstPersonOffset)
+                }
+            CamController["FOV",number]=90
+            EGP:egpAlpha(23,0)
+            EGP:egpAlpha(24,0)
+        }
+        if( changed(Zoom) ){ Baseplate:soundPlay("zoom",0,ZoomSound) }
+    
+    # Display CamController Holo if DebugOn
+    if( Debug ){
+       holoPos(1,Position)
+      #holoAng(1,Angle)    
+    }else{
+        holoPos(1,Position)
+        holoAng(1,Angle)
+    }
+    
+    # Update Aimpoints
+    if( PrimaryGunAimpoint ){
+        if( PrimaryGun ){
+            holoPos(2,rangerOffset(9999999999,PrimaryGun:pos()+PrimaryGun:forward()*100,PrimaryGun:forward()):position())
+        }else{
+            holoDelete(2)
+        }
+    }
+    if( SecondaryGunAimpoint ){
+        if( SecondaryGun ){
+            holoPos(40,rangerOffset(9999999999,SecondaryGun:pos()+SecondaryGun:forward()*100,SecondaryGun:forward()):position())
+        }else{
+            holoDelete(40)
+        }
+    }
+
+    # Update compassTop Holo Angle
+    if( CompassPrimaryGun ){
+        holoAng(4,PrimaryGun:angles() + CompassPrimaryGunAngle)
+    }
+    if( !CompassPrimaryGun | !PrimaryGun ){
+        holoAng(4,TurretBase:angles() + CompassTurretBaseAngle )
+    }
+    
+    # Update compassBottom Holo Angle
+    holoAng(3,Baseplate:angles() + CompassBaseplateAngle)
+
+}
+
+# ~ Debug
+#print( getTimers() )
+#OPS = ops()
+#CPU = cpuUsage()*1000000
