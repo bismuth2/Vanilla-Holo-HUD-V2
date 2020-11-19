@@ -17,6 +17,7 @@ Simply wire each Input to whatever you want, there are no Outputs except Speedom
   * The E2 will automatically detect what Entities you have wired, and will adjust accordingly.
   * The E2 REQUIRES a cam controller for the compass to function!
 
+
  REQUIRED CAM CONTROLLER SETTINGS
   * Coordinates local to parent - NO
   * Client side movement        - YES
