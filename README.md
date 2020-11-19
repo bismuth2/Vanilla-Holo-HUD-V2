@@ -13,20 +13,20 @@ Download the Project and install into:
 C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 
 ## USAGE
- Simply wire each Input to whatever you want, there are no Outputs except Speedometer(Wire Speedometer Input to it) and ActiveOutput(For DakTek Mechs, or whatever you need it for.)
+Simply wire each Input to whatever you want, there are no Outputs except Speedometer(Wire Speedometer Input to it) and ActiveOutput(For DakTek Mechs, or whatever you need it for.)
   * The E2 will automatically detect what Entities you have wired, and will adjust accordingly.
   * The E2 REQUIRES a cam controller for the compass to function!
 
-  REQUIRED CAM CONTROLLER SETTINGS
-    * Coordinates local to parent - NO
-    * Client side movement        - YES
-    * Free Movement               - NO
-    * Localized Movement          - NO
-    * Client Side Zooming         - NO
-    * Auto un-clip                - Preference
-    * Auto un-clip ignores water  - Preference
-    * Draw Player                 - Preference
-    * Draw Parent                 - NO
+ REQUIRED CAM CONTROLLER SETTINGS
+  * Coordinates local to parent - NO
+  * Client side movement        - YES
+  * Free Movement               - NO
+  * Localized Movement          - NO
+  * Client Side Zooming         - NO
+  * Auto un-clip                - Preference
+  * Auto un-clip ignores water  - Preference
+  * Draw Player                 - Preference
+  * Draw Parent                 - NO
 
 ## TROUBLESHOOTING
 Problem including file 'gtmp3_lib'
