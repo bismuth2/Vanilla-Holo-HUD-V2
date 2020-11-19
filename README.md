@@ -1,7 +1,7 @@
 # DESCRIPTION
 This is a Garry's Mod Wiremod Expression2 HUD made for vehicles.
 
-Features an Intro Sequence, a 3D compass, GTMP Minimap Support, backup RTcam
+Features an Intro Sequence, a 3D compass, @redreaper2020 GTMP Minimap Support, backup RTcam
 
 Includes support for Combat Vehicles, Mechs, Cars & 1 primary/secondary gun & 2 Counter-measures
   * It was designed with Immersion & Simplicity in-mind, if you are like me, and you hate seeing HUD elements
