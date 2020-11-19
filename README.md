@@ -4,20 +4,20 @@ This is a Garry's Mod Wiremod Expression2 HUD made for vehicles.
 Features an Intro Sequence, a 3D compass, GTMP Minimap Support, backup RTcam
 
 Includes support for Combat Vehicles, Mechs, Cars & 1 primary/secondary gun & 2 Counter-measures
-	* It was designed with Immersion & Simplicity in-mind, if you are like me, and you hate seeing HUD elements
-	* while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
+    * It was designed with Immersion & Simplicity in-mind, if you are like me, and you hate seeing HUD elements
+    * while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
   
-## INSTALLATION
+# INSTALLATION
 Download the Project and install into:
 
 C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 
-## USAGE
+# USAGE
  Simply wire each Input to whatever you want, there are no Outputs except Speedometer(Wire Speedometer Input to it) and ActiveOutput(For DakTek Mechs, or whatever you need it for.)
 	* The E2 will automatically detect what Entities you have wired, and will adjust accordingly.
 	* The E2 REQUIRES a cam controller for the compass to function!
 
-## REQUIRED CAM CONTROLLER SETTINGS
+# REQUIRED CAM CONTROLLER SETTINGS
  Coordinates local to parent - NO
  Client side movement        - YES
  Free Movement               - NO
@@ -28,7 +28,7 @@ C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
  Draw Player                 - Preference
  Draw Parent                 - NO
 
-## TROUBLESHOOTING
+# TROUBLESHOOTING
 Problem including file 'gtmp3_lib'
 	* This E2 REQUIRES gtmp3_lib saved inside your expression2 directory, if you don't have it, #include will fail!
 
@@ -42,10 +42,10 @@ I don't see the MiniMap on my HUD!
 The CamController is not working!
 	* The CamController requires atleast a Baseplate or a TurretBase wired to the E2 to function.
 
-## INFORMATION & HOW IT WORKS
+# INFORMATION & HOW IT WORKS
 
 
-## IMAGES
+# IMAGES
 ![Variant 1](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306798/A330DD490D5C1642968F6E24861466168481D331/)
 
 ![Varient 2](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306660/C4D30618E565B8E44776774F7EFFE579C1224C72/)
