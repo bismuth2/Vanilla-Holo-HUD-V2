@@ -7,7 +7,11 @@ C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\data\expressio
 
 ## USAGE
 It is designed to be plug-n-play and easy to install in a vehicle
+
 Start by simply wiring the inputs / outputs you want
+
 Edit the config
+
 Refresh the chip
+
 Then let the E2 do the work for you
