@@ -1,5 +1,5 @@
 # DESCRIPTION
-This is a Garry's Mod HUD built with Wiremod Expression2.
+This is a Garry's Mod HUD written in Wiremod's Expression2 language https://github.com/wiremod/wire/wiki/Expression-2.
 
 Features an Intro Sequence, a 3D compass, GTMP Minimap Support, backup RTcam
 
