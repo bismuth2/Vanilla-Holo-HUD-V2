@@ -1,5 +1,5 @@
 # DESCRIPTION
-This is a Garry's Mod HUD for ACF vehicles written in Wiremod's Expression2 language.
+This is a Garry's Mod HUD for use in ACF vehicles written in Wiremod's Expression2 language.
 
 This project requires two addons to work in-game:
 * [ACF](https://github.com/nrlulz/ACF)
