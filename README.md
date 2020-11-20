@@ -14,7 +14,7 @@ C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 Inside the Expression2 is a tutorial and default config included.
 
 ## FEATURES
-* Intro Sequence, 3D compass, GTMP Minimap Support, backup camera, support for any screen resolution, and more...
+* Intro Sequence, 3D compass, redreapers GTMP Minimap Support, backup camera, support for any screen resolution, and more...
 
 * Flexible support for any vehicle type.
 
