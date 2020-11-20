@@ -22,6 +22,8 @@ Inside the Expression 2 is a tutorial and default config included.
 
 * Low server overhead at ~200 ops / ~65 cpu
 
+* Easily editable config
+
 * Designed with immersion & simplicity in-mind.
 
 ## IMAGES
