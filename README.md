@@ -35,5 +35,5 @@ Some would argue this is over engineered for a such a niche use case. However, I
 ## IMAGES
 ![Variant 1](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306798/A330DD490D5C1642968F6E24861466168481D331/)
 ![Varient 2](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306660/C4D30618E565B8E44776774F7EFFE579C1224C72/)
-![Combat 1](https://steamuserimages-a.akamaihd.net/ugc/1651094778155487553/786E251C3B0981A098955AF866B1E9BA40915EF4/)
-![Combat 2](https://steamuserimages-a.akamaihd.net/ugc/1651094778155499777/44BF0D0752C9D79D0DD2F4E78FA65092D52305FD/)
+![Combat 1](https://steamuserimages-a.akamaihd.net/ugc/1651094778155499777/44BF0D0752C9D79D0DD2F4E78FA65092D52305FD/)
+![Combat 2](https://steamuserimages-a.akamaihd.net/ugc/1288542787665709048/EC3AB25E602D417E3938CC9F620B8C5DBF653D66/)
