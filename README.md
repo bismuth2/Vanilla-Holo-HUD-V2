@@ -14,11 +14,11 @@ C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 Open the Expression2 and scroll down, there is a tutorial and default config included.
 
 ## FEATURES
-It features an Intro Sequence, 3D compass, GTMP Minimap Support, a backup camera, support for any screen resolution, and many more...
+* Features an Intro Sequence, 3D compass, GTMP Minimap Support, a backup camera, support for any screen resolution, and many more...
 
-It has flexible support for any vehicle type (including Mechs, land or air vehicles), and support for 1 primary/secondary gun & 2 Counter-measures
+* Flexible support for any vehicle type (including Mechs, land or air vehicles), and support for 1 primary/secondary gun & 2 Counter-measures
 
-It was designed with Immersion & Simplicity in-mind. If you are like me and you hate seeing HUD elements
+* Designed with Immersion & Simplicity in-mind. If you are like me and you hate seeing HUD elements
 while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
 
 ## IMAGES
