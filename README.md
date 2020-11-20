@@ -21,6 +21,12 @@ It has flexible support for any vehicle type (including Mechs, land or air vehic
 It was designed with Immersion & Simplicity in-mind. If you are like me and you hate seeing HUD elements
 while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
 
+## IMAGES
+![Variant 1](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306798/A330DD490D5C1642968F6E24861466168481D331/)
+![Varient 2](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306660/C4D30618E565B8E44776774F7EFFE579C1224C72/)
+![Combat 1](https://steamuserimages-a.akamaihd.net/ugc/1651094778155499777/44BF0D0752C9D79D0DD2F4E78FA65092D52305FD/)
+![Combat 2](https://steamuserimages-a.akamaihd.net/ugc/1288542787665709048/EC3AB25E602D417E3938CC9F620B8C5DBF653D66/)
+
 ## WHY DID I CREATE THIS?
 This project started initially because I was tired of using public HUDs for the vehicles I built in the Sandbox gamemode.
 
@@ -29,9 +35,3 @@ I wanted it to be themed like the default Garry's Mod HUD, and be easily tweaked
 As well as include advanced features that differ it from ordinary HUDs people use.
 
 Some would argue this is over engineered for a such a niche use case. However, I wanted this to be a sort of "one size fits all" for vehicle HUDs.
-
-## IMAGES
-![Variant 1](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306798/A330DD490D5C1642968F6E24861466168481D331/)
-![Varient 2](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306660/C4D30618E565B8E44776774F7EFFE579C1224C72/)
-![Combat 1](https://steamuserimages-a.akamaihd.net/ugc/1651094778155499777/44BF0D0752C9D79D0DD2F4E78FA65092D52305FD/)
-![Combat 2](https://steamuserimages-a.akamaihd.net/ugc/1288542787665709048/EC3AB25E602D417E3938CC9F620B8C5DBF653D66/)
