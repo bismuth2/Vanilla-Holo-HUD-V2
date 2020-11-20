@@ -8,7 +8,7 @@ To learn more about these mods, here are some resources:
 
 
 
-Features an Intro Sequence, a 3D compass, GTMP Minimap Support, backup RTcam
+Features an Intro Sequence, 3D compass, GTMP Minimap Support, and a backup RenderTargetCamera
 
 Includes support for Combat Vehicles, Mechs, Cars & 1 primary/secondary gun & 2 Counter-measures
   * It was designed with Immersion & Simplicity in-mind, if you are like me, and you hate seeing HUD elements
