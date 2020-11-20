@@ -11,7 +11,7 @@ Download the Project and install into:
 C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 
 ## IN-GAME USAGE
-Open the Expression2 and scroll down, there is a tutorial and default config included.
+Inside the Expression2 is a tutorial and default config included.
 
 ## FEATURES
 * Features an Intro Sequence, 3D compass, GTMP Minimap Support, a backup camera, support for any screen resolution, and many more...
