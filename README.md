@@ -1,5 +1,5 @@
 # DESCRIPTION
-This is a Garry's Mod HUD for use in ACF vehicles written in Wiremod's Expression2 language.
+This is a Garry's Mod HUD for use in ACF vehicles written in Wiremod's Expression 2 language.
 
 This project requires two addons to work in-game:
 * [ACF](https://github.com/nrlulz/ACF)
@@ -11,7 +11,7 @@ Download the Project and install into:
 C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 
 ## IN-GAME USAGE
-Inside the Expression2 is a tutorial and default config included.
+Inside the Expression 2 is a tutorial and default config included.
 
 ## FEATURES
 * Intro Sequence, 3D compass, GTMP Minimap Support, backup camera, support for any screen resolution, and more...
