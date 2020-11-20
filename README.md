@@ -20,6 +20,8 @@ Inside the Expression2 is a tutorial and default config included.
 
 * Support for 4 weapons.
 
+* Low server overhead at ~170 ops / ~100 cpu
+
 * Designed with immersion & simplicity in-mind.
 
 ## IMAGES
