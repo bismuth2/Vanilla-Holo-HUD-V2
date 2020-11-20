@@ -1,4 +1,4 @@
-# DESCRIPTION
+# WHAT IS VANILLA HOLO HUD?
 This is a Garry's Mod HUD for ACF vehicles written in Wiremod's Expression2 language.
 
 To learn more about these mods, here are some resources:
