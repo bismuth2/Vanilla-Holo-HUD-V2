@@ -13,7 +13,6 @@ Features an Intro Sequence, 3D compass, GTMP Minimap Support, and a backup Rende
 Includes support for Combat Vehicles, Mechs, Cars & 1 primary/secondary gun & 2 Counter-measures
 
 It was designed with Immersion & Simplicity in-mind, if you are like me, and you hate seeing HUD elements
-  
 while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
   
 ## INSTALLATION
