@@ -13,14 +13,23 @@ C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 ## IN-GAME USAGE
 Open the E2 and scroll down, there is a tutorial and default config included.
 
-## INFORMATION & HOW IT WORKS
-Features an Intro Sequence, 3D compass, GTMP Minimap Support, and a backup RenderTargetCamera
+## WHY DID I CREATE THIS?
+This project started initially because I was tired of using public HUDs for the vehicles I built in the Sandbox gamemode.
 
-Includes support for Combat Vehicles, Mechs, Cars & 1 primary/secondary gun & 2 Counter-measures
+I wanted it to be themed like the default Garry's Mod HUD, and be easily tweaked and usable for someone new to building ACF vehicles.
+
+As well as include advanced features that differ it from ordinary HUDs people use.
+
+It features an Intro Sequence, 3D compass, GTMP Minimap Support, a backup camera, support for any screen resolution, and many more...
+
+It has flexible support for any vehicle type (including Mechs, land or air vehicles), and support for 1 primary/secondary gun & 2 Counter-measures
 
 It was designed with Immersion & Simplicity in-mind. If you are like me and you hate seeing HUD elements
 while seeing the instruments inside your vehicle, there are many options to make the HUD appear as you see fit in FirstPerson & ThirdPerson
 
+Some would argue this is over engineered for a such a niche use case, and I agree. However, I wanted this to be a sort of "one size fits all" for vehicle HUDs.
+
+## HOW IT WORKS?
 
 ## IMAGES
 ![Variant 1](https://steamuserimages-a.akamaihd.net/ugc/1174824798821306798/A330DD490D5C1642968F6E24861466168481D331/)
