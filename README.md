@@ -1,5 +1,5 @@
 # DESCRIPTION
-This is a Garry's Mod Wiremod Expression2 HUD made for vehicles.
+This is a Garry's Mod HUD built with Wiremod Expression2 made for vehicles.
 
 Features an Intro Sequence, a 3D compass, GTMP Minimap Support, backup RTcam
 
