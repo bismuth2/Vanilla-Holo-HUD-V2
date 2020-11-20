@@ -192,37 +192,21 @@ if( first() ){
             # ~ Intro Timers (Formatted in Milliseconds)
             IntroDisconnected = 1000
             IntroConnecting = 3000
-                # ~ Intro SoundFX
+                # ~ Intro Sound effects
                 Disconnected = "novaprospekt.radiostatic_1"
                 Connecting1 = "acf_extra/airfx/gear_down.wav"
                 Connecting2 = "acf_extra/airfx/bomb_reload.wav"
                 Success1 = "k_lab.teleport_sound"
                 Success2 = ""
-                ## ~ EXTRA SOUND FX ~ ##
-                # ~ Disconnected Sounds
-                # novaprospekt.radiostatic_1
-                # acf_extra/airfx/hominglockaquired1.wav
-                # HUDQuickInfo.LowAmmo
-                    # ~ Connecting Sounds
-                    # acf_extra/airfx/gear_down.wav
-                    # acf_extra/airfx/bomb_reload.wav
-                        # ~ Success Sounds
-                        # hl1/fvox/activated.wav
-                        # k_lab.teleport_sound
-                            # ~ Intro ScreenFX
-                            Disconnected_Mat = "effects/tvscreen_noise002a"
-                            Connecting_Mat = "effects/tvscreen_noise001a"
-                            # ~ Extra Materials
-                            # effects/tvscreen_noise002a
-                            # effects/tvscreen_noise001a
-                            # effects/prisonmap_disp
-                            # models/props_lab/projector_noise
+                    # ~ Intro material effects
+                    Disconnected_Mat = "effects/tvscreen_noise002a"
+                    Connecting_Mat = "effects/tvscreen_noise001a"
   
     #~~ Enable Screen overlay effects
         ScreenFX_On = 1
         ScreenFX = "effects/combine_binocoverlay"
     
-    #~~ Enable RTcam Screen (Requires a RT Camera!)
+    #~~ Enable Backup Camera (Requires a RT Camera!)
         BackupCam = 0
     
     #~~ Enable redreaper GTMP Support (Requires a Console Screen & Redreaper's GTMP3 Lib E2!)
