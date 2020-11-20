@@ -1,10 +1,9 @@
 # WHAT IS VANILLA HOLO HUD?
 This is a Garry's Mod HUD for ACF vehicles written in Wiremod's Expression2 language.
 
-To learn more about the Garry's Mod addons used, here are some resources:
-* [ACF Github](https://github.com/nrlulz/ACF)
+This project requires two addons to work in-game:
+* [ACF](https://github.com/nrlulz/ACF)
 * [Wiremod](https://steamcommunity.com/sharedfiles/filedetails/?id=160250458)
-* [E2 Wiki](https://github.com/wiremod/wire/wiki/Expression-2)
 
 ## INSTALLATION
 Download the Project and install into:
