@@ -23,8 +23,11 @@ while seeing the instruments inside your vehicle, there are many options to make
 
 ## WHY DID I CREATE THIS?
 This project started initially because I was tired of using public HUDs for the vehicles I built in the Sandbox gamemode.
+
 I wanted it to be themed like the default Garry's Mod HUD, and be easily tweaked and usable for someone new to building ACF vehicles.
+
 As well as include advanced features that differ it from ordinary HUDs people use.
+
 Some would argue this is over engineered for a such a niche use case. However, I wanted this to be a sort of "one size fits all" for vehicle HUDs.
 
 ## HOW IT WORKS?
