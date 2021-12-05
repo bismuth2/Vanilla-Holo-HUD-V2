@@ -10,6 +10,9 @@ Download the Project and install into:
 
 C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\garrysmod\
 
+## CONTRIBUTORS
+redreaper2020 - Garrysmod Topographical Mapping Project V3 (GTMP3_lib)
+
 ## IN-GAME USAGE
 Inside the Expression 2 is a tutorial and default config included.
 
